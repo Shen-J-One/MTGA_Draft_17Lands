@@ -5,6 +5,7 @@ Provides a blocking, visually appealing loading screen for heavy background oper
 
 from tkinter import ttk
 from src.ui.styles import Theme
+from src.i18n import t
 
 
 class LoadingOverlay(ttk.Frame):
@@ -19,14 +20,16 @@ class LoadingOverlay(ttk.Frame):
 
         self.title_lbl = ttk.Label(
             self.center_box,
-            text="Loading Draft",
+            text=t("dashboard.overlay_loading_draft"),
             font=Theme.scaled_font(16, "bold"),
             bootstyle="primary",
         )
         self.title_lbl.pack(pady=(0, Theme.scaled_val(10)))
 
         self.status_lbl = ttk.Label(
-            self.center_box, text="Initializing...", font=Theme.scaled_font(11)
+            self.center_box,
+            text=t("dashboard.overlay_initializing"),
+            font=Theme.scaled_font(11),
         )
         self.status_lbl.pack(pady=(0, Theme.scaled_val(20)))
 
