@@ -9,6 +9,7 @@ import logging
 from typing import Dict, Optional
 import tkinter
 from tkinter import ttk
+from src.i18n import t
 import os
 import sys
 
@@ -196,7 +197,7 @@ class DraftApp:
 
     def _perform_deep_sync(self):
         """Phase 2: Population of heavy tabs (Deck Builder, Card Pool)."""
-        self.vars["status_text"].set("Ready")
+        self.vars["status_text"].set(t("topbar.ready"))
 
         for p in [self.panel_taken, self.panel_suggest]:
             try:
@@ -275,7 +276,7 @@ class DraftApp:
         self.vars["set_label"] = tkinter.StringVar(value="")
         self.vars["selected_event"] = tkinter.StringVar(value="")
         self.vars["selected_group"] = tkinter.StringVar(value="")
-        self.vars["status_text"] = tkinter.StringVar(value="Ready")
+        self.vars["status_text"] = tkinter.StringVar(value=t("topbar.ready"))
 
     def _build_layout(self):
         """Constructs the primary shell (TopBar, Dashboard Pane, Tabs Pane)."""
@@ -318,7 +319,7 @@ class DraftApp:
 
         self.btn_toggle_tabs = ttk.Button(
             self.tab_controls,
-            text="▼ Hide Tabs",
+            text=t("ui.toggle_tabs_hide"),
             bootstyle="secondary-outline",
             command=self._toggle_tabs,
             cursor="hand2",
@@ -368,30 +369,32 @@ class DraftApp:
             self.notebook, self.configuration, self._refresh_ui_data
         )
 
-        self.notebook.add(self.panel_data, text=" Datasets ")
-        self.notebook.add(self.panel_taken, text=" Card Pool ")
-        self.notebook.add(self.panel_suggest, text=" Deck Builder ")
-        self.notebook.add(self.panel_custom, text=" Custom Deck ")
-        self.notebook.add(self.panel_compare, text=" Comparisons ")
-        self.notebook.add(self.panel_tiers, text=" Tier Lists ")
+        self.notebook.add(self.panel_data, text=t("tab.datasets"))
+        self.notebook.add(self.panel_taken, text=t("tab.card_pool"))
+        self.notebook.add(self.panel_suggest, text=t("tab.deck_builder"))
+        self.notebook.add(self.panel_custom, text=t("tab.custom_deck"))
+        self.notebook.add(self.panel_compare, text=t("tab.comparisons"))
+        self.notebook.add(self.panel_tiers, text=t("tab.tier_lists"))
 
-        # Safely trigger dataset UI refreshes if the panel supports it (prevents Pytest Mocking crashes)
+        # Identify the Datasets tab by widget identity (language-agnostic)
+        # so the refresh hook works after localization.
+        datasets_tab_id = str(self.panel_data)
         self.notebook.bind(
             "<<NotebookTabChanged>>",
             lambda e: (
                 self.panel_data.refresh()
                 if hasattr(self.panel_data, "refresh")
-                and "Datasets" in self.notebook.tab(self.notebook.select(), "text")
+                and self.notebook.select() == datasets_tab_id
                 else None
             ),
         )
 
     def _force_reload(self):
         """Forces a deep scan of the active Arena Log."""
-        self.vars["status_text"].set("Deep Scanning Log...")
+        self.vars["status_text"].set(t("topbar.deep_scanning"))
         if hasattr(self, "loading_overlay"):
-            self.loading_overlay.show("Reloading Application State")
-            self.loading_overlay.update_status("Deep Scanning Log...")
+            self.loading_overlay.show(t("topbar.reloading_app_state"))
+            self.loading_overlay.update_status(t("topbar.deep_scanning"))
         self.root.update_idletasks()
 
         with self.orchestrator.scanner.lock:
@@ -420,11 +423,11 @@ class DraftApp:
     def _toggle_tabs(self):
         if self.tabs_visible:
             self.splitter.forget(self.bottom_pane)
-            self.btn_toggle_tabs.config(text="▲ Show Tabs")
+            self.btn_toggle_tabs.config(text=t("ui.toggle_tabs_show"))
             self.tabs_visible = False
         else:
             self.splitter.add(self.bottom_pane, weight=2)
-            self.btn_toggle_tabs.config(text="▼ Hide Tabs")
+            self.btn_toggle_tabs.config(text=t("ui.toggle_tabs_hide"))
             self.tabs_visible = True
 
     def _ensure_tabs_visible(self):
@@ -519,11 +522,11 @@ class DraftApp:
 
         # 3. DRAW UI
         if pk > 0:
-            self.vars["status_text"].set(f"Pack {pk} Pick {pi}")
+            self.vars["status_text"].set(t("topbar.pack_pick", pack=pk, pick=pi))
             if hasattr(self.top_bar, "lbl_status"):
                 self.top_bar.lbl_status.configure(bootstyle="success")
         else:
-            self.vars["status_text"].set("Waiting for draft...")
+            self.vars["status_text"].set(t("topbar.waiting_draft_short"))
             if hasattr(self.top_bar, "lbl_status"):
                 self.top_bar.lbl_status.configure(bootstyle="secondary")
 

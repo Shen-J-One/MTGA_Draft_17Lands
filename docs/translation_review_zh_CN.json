@@ -344,6 +344,17 @@
     "evaluating": { "en": "Evaluating {evt} ({grp})", "zh": "评估 {evt}({grp})" },
     "processing_dataset": { "en": "Processing dataset...", "zh": "处理数据集中..." },
     "ready": { "en": "Ready", "zh": "就绪" },
+    "deep_scanning": { "en": "Deep Scanning Log...", "zh": "深度扫描日志中..." },
+    "reloading_app_state": {
+      "en": "Reloading Application State",
+      "zh": "重新加载应用状态"
+    },
+    "pack_pick": { "en": "Pack {pack} Pick {pick}", "zh": "第{pack}包 第{pick}抓" },
+    "waiting_draft_short": {
+      "en": "Waiting for draft...",
+      "zh": "等待轮抓...",
+      "status": "confirmed"
+    },
     "history_live": {
       "en": "🔴 Live: {set_display}",
       "zh": "🔴 实时:{set_display}"
@@ -966,7 +977,21 @@
     "missing_dataset_body": {
       "en": "No dataset found for {display_name} ({type}).\n\nWould you like to automatically download the 17Lands 'All Users' data for this event?",
       "zh": "未找到 {display_name}({type})的数据集。\n\n是否自动下载该赛事的 17Lands「全部玩家」数据?"
+    },
+
+    "settings_save_error_title": {
+      "en": "Settings Save Error",
+      "zh": "设置保存错误"
+    },
+    "settings_save_error_body": {
+      "en": "Could not save preferences to {path}.\n\nThis is usually caused by an Anti-Virus or OneDrive temporarily locking the file.\n\nError: {error}",
+      "zh": "无法保存首选项到 {path}。\n\n通常由杀毒软件或 OneDrive 临时锁定文件导致。\n\n错误:{error}"
     }
+  },
+
+  "ui": {
+    "toggle_tabs_hide": { "en": "▼ Hide Tabs", "zh": "▼ 隐藏标签页" },
+    "toggle_tabs_show": { "en": "▲ Show Tabs", "zh": "▲ 显示标签页" }
   },
 
   "column": {

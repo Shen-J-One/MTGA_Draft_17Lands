@@ -5,6 +5,7 @@ import tkinter.messagebox
 from datetime import datetime, date, timedelta
 from src.configuration import Configuration, write_configuration, read_configuration
 from src.app_update import AppUpdate
+from src.i18n import t
 from src.logger import create_logger
 from src.utils import retrieve_local_set_list, read_dataset_info
 from src.seventeenlands import Seventeenlands
@@ -52,12 +53,13 @@ class Notifications:
         """Displays a prompt allowing users to immediately route to the Dataset window for a missing set."""
         display_name = full_set_name if full_set_name else set_code
 
-        msg = (
-            f"No dataset found for {display_name} ({current_event_type}).\n\n"
-            f"Would you like to automatically download the 17Lands 'All Users' data for this event?"
+        msg = t(
+            "dialog.missing_dataset_body",
+            display_name=display_name,
+            type=current_event_type,
         )
 
-        if tkinter.messagebox.askyesno("Missing Dataset", msg):
+        if tkinter.messagebox.askyesno(t("dialog.missing_dataset_title"), msg):
             args = DatasetArgs(
                 draft_set=set_code,
                 draft=current_event_type if current_event_type else "PremierDraft",

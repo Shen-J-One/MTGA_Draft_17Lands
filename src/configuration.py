@@ -8,6 +8,7 @@ import threading
 from pydantic import BaseModel, field_validator, Field
 from typing import List, Dict, Tuple
 from src import constants
+from src.i18n import t
 from src.logger import create_logger
 from src.constants import BASE_DIR
 
@@ -254,8 +255,12 @@ def write_configuration(
                 import tkinter.messagebox
 
                 tkinter.messagebox.showerror(
-                    "Settings Save Error",
-                    f"Could not save preferences to {file_location}.\n\nThis is usually caused by an Anti-Virus or OneDrive temporarily locking the file.\n\nError: {error}",
+                    t("dialog.settings_save_error_title"),
+                    t(
+                        "dialog.settings_save_error_body",
+                        path=file_location,
+                        error=error,
+                    ),
                 )
             except Exception:
                 pass
