@@ -12,6 +12,7 @@ from typing import List, Dict, Any, Tuple, Optional
 from PIL import Image, ImageTk
 from concurrent.futures import ThreadPoolExecutor
 from src import constants
+from src.i18n import t
 from src.card_logic import field_process_sort
 from src.ui.styles import Theme
 
@@ -327,7 +328,7 @@ class CardToolTip(tkinter.Toplevel):
         wr, iwd, smp = gs.get("gihwr", 0.0), gs.get("iwd", 0.0), gs.get("samples", 0)
         tb.Label(
             sf,
-            text="GLOBAL PERFORMANCE",
+            text=t("dashboard.tooltip_global_perf"),
             bootstyle="primary",
             font=(Theme.FONT_FAMILY, int(10 * scale), "bold"),
         ).pack(anchor="w")
@@ -387,7 +388,7 @@ class CardToolTip(tkinter.Toplevel):
         if va:
             tb.Label(
                 sf,
-                text="ARCHETYPE PLAY SHARE",
+                text=t("dashboard.tooltip_archetype_share"),
                 bootstyle="success",
                 font=(Theme.FONT_FAMILY, int(10 * scale), "bold"),
             ).pack(anchor="w")
@@ -410,7 +411,7 @@ class CardToolTip(tkinter.Toplevel):
         if tags:
             tb.Label(
                 sf,
-                text="CARD ROLES",
+                text=t("dashboard.tooltip_card_roles"),
                 bootstyle="warning",
                 font=(Theme.FONT_FAMILY, int(10 * scale), "bold"),
             ).pack(anchor="w", pady=Theme.scaled_val((12, 4)))
@@ -1076,13 +1077,13 @@ class DynamicTreeviewManager(ttk.Frame):
 
         if field != "name":
             menu.add_command(
-                label=f"Remove '{field.upper()}'",
+                label=t("column.ctx_remove_field", FIELD=field.upper()),
                 command=lambda f=field: self._remove_column_by_name(f),
             )
             menu.add_separator()
 
         am = tkinter.Menu(menu, tearoff=0)
-        menu.add_cascade(label="Add Column", menu=am)
+        menu.add_cascade(label=t("column.ctx_add_column"), menu=am)
         from src.constants import COLUMN_FIELD_LABELS, column_label
 
         for fi in COLUMN_FIELD_LABELS.keys():
@@ -1106,7 +1107,9 @@ class DynamicTreeviewManager(ttk.Frame):
                         command=lambda x=internal_id: self._add_column(x),
                     )
         menu.add_separator()
-        menu.add_command(label="Reset to Defaults", command=self._reset_defaults)
+        menu.add_command(
+            label=t("column.ctx_reset_defaults"), command=self._reset_defaults
+        )
         menu.post(event.x_root, event.y_root)
 
     def _handle_click(self, event):
@@ -1140,7 +1143,7 @@ class DynamicTreeviewManager(ttk.Frame):
                 tn = f"TIER{idx}"
                 if tn not in self.active_fields:
                     menu.add_command(
-                        label=f"TIER: {lb} ({sc})",
+                        label=t("column.ctx_tier_label", label=lb, set=sc),
                         command=lambda x=tn: self._add_column(x),
                     )
 

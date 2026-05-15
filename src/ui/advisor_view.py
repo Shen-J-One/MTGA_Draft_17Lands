@@ -8,6 +8,7 @@ from tkinter import ttk
 import ttkbootstrap as tb
 from typing import List
 from src.advisor.schema import Recommendation
+from src.i18n import t
 from src.ui.styles import Theme
 from src.constants import TAG_VISUALS
 from src.ui.components import CollapsibleFrame
@@ -35,7 +36,7 @@ class AdvisorPanel(tb.Frame):
         if self.is_collapsible:
             self.collapsible = CollapsibleFrame(
                 self,
-                title="ADVISOR RECOMMENDATIONS",
+                title=t("dashboard.advisor_recommendations"),
                 configuration=self.configuration,
                 setting_key="advisor_panel",
             )
@@ -55,7 +56,7 @@ class AdvisorPanel(tb.Frame):
         if not recs:
             tb.Label(
                 self.container,
-                text="Calculating tactical scores...",
+                text=t("dashboard.advisor_calculating"),
                 font=Theme.scaled_font(10 if self.mini_mode else 9),
             ).pack(pady=Theme.scaled_val(10), anchor="center")
             return
@@ -145,13 +146,13 @@ class AdvisorPanel(tb.Frame):
             # --- Body: Reasoning Description & Tags ---
             reason_text = ""
             if is_elite:
-                reason_text += f"ELITE PICK (+{rec.z_score}σ)"
+                reason_text += t("advisor_reason.elite_pick", z=rec.z_score)
                 if rec.reasoning:
                     reason_text += f" | {' | '.join(rec.reasoning)}"
             elif rec.reasoning:
                 reason_text += " | ".join(rec.reasoning)
             else:
-                reason_text += "Tactically superior for your pool"
+                reason_text += t("advisor_reason.tactically_superior")
 
             if rec.tags:
                 tag_strings = [TAG_VISUALS.get(t, t.capitalize()) for t in rec.tags]
