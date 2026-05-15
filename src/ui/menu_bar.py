@@ -8,6 +8,7 @@ import tkinter
 import os
 from tkinter import filedialog, messagebox
 from src import constants
+from src.i18n import t
 from src.ui.styles import Theme
 from src.configuration import write_configuration
 from src.ui.windows.practice_dialog import PracticeDialog
@@ -26,41 +27,45 @@ class AppMenuBar:
 
         # --- FILE MENU ---
         file_m = tkinter.Menu(m, tearoff=0)
-        m.add_cascade(label="File", menu=file_m)
+        m.add_cascade(label=t("menu.file"), menu=file_m)
         file_m.add_command(
-            label="Preferences...", command=self.app_context._open_settings
+            label=t("menu.file_preferences"), command=self.app_context._open_settings
         )
         file_m.add_separator()
-        file_m.add_command(label="Read Draft Log...", command=self._read_draft_log)
-        file_m.add_command(label="Read Player.log...", command=self._read_player_log)
         file_m.add_command(
-            label="Locate MTGA Data Folder...", command=self._locate_mtga_data
+            label=t("menu.file_read_draft_log"), command=self._read_draft_log
+        )
+        file_m.add_command(
+            label=t("menu.file_read_player_log"), command=self._read_player_log
+        )
+        file_m.add_command(
+            label=t("menu.file_locate_mtga"), command=self._locate_mtga_data
         )
         file_m.add_separator()
-        file_m.add_command(label="Export Draft (CSV)", command=self._export_csv)
-        file_m.add_command(label="Export Draft (JSON)", command=self._export_json)
+        file_m.add_command(label=t("menu.file_export_csv"), command=self._export_csv)
+        file_m.add_command(label=t("menu.file_export_json"), command=self._export_json)
         file_m.add_separator()
-        file_m.add_command(label="Exit", command=self.app_context._on_close)
+        file_m.add_command(label=t("menu.file_exit"), command=self.app_context._on_close)
 
         # --- TOOLS MENU ---
         tools_m = tkinter.Menu(m, tearoff=0)
-        m.add_cascade(label="Tools", menu=tools_m)
+        m.add_cascade(label=t("menu.tools"), menu=tools_m)
         tools_m.add_command(
-            label="Practice: Generate Random Sealed Pool",
+            label=t("menu.tools_practice_generate"),
             command=lambda: PracticeDialog(
                 self.root, self.app_context, is_import=False
             ),
         )
         tools_m.add_command(
-            label="Practice: Import Sealed Pool from Clipboard",
+            label=t("menu.tools_practice_import"),
             command=lambda: PracticeDialog(self.root, self.app_context, is_import=True),
         )
 
         # --- THEME MENU ---
         theme_m = tkinter.Menu(m, tearoff=0)
-        m.add_cascade(label="Theme", menu=theme_m)
+        m.add_cascade(label=t("menu.theme"), menu=theme_m)
         theme_m.add_command(
-            label="System (Native)",
+            label=t("menu.theme_system"),
             command=lambda: self._update_theme(new_palette="System"),
         )
         theme_m.add_separator()
@@ -69,14 +74,14 @@ class AppMenuBar:
             if name == "System":
                 continue
             theme_m.add_command(
-                label=f"Mana Flair: {name}",
+                label=t("menu.theme_mana_flair", name=name),
                 command=lambda n=name: self._update_theme(new_palette=n),
             )
 
         custom_m = tkinter.Menu(theme_m, tearoff=0)
-        theme_m.add_cascade(label="Custom Themes (.tcl)", menu=custom_m)
+        theme_m.add_cascade(label=t("menu.theme_custom"), menu=custom_m)
         custom_m.add_command(
-            label="Browse for .tcl...", command=self._browse_custom_tcl
+            label=t("menu.theme_browse_tcl"), command=self._browse_custom_tcl
         )
 
         for name, path in Theme.discover_custom_themes().items():
@@ -107,29 +112,46 @@ class AppMenuBar:
 
     def _browse_custom_tcl(self):
         f = filedialog.askopenfilename(
-            filetypes=(("Tcl files", "*.tcl"), ("All", "*.*"))
+            filetypes=(
+                (t("menu.filter_tcl_files"), "*.tcl"),
+                (t("menu.filter_all_files"), "*.*"),
+            )
         )
         if f:
             self._update_theme(new_custom=f)
 
     def _read_draft_log(self):
-        f = filedialog.askopenfilename(filetypes=(("Log", "*.log"), ("All", "*.*")))
+        f = filedialog.askopenfilename(
+            filetypes=(
+                (t("menu.filter_log_files"), "*.log"),
+                (t("menu.filter_all_files"), "*.*"),
+            )
+        )
         if f:
             if hasattr(self.app_context, "loading_overlay"):
-                self.app_context.loading_overlay.show("Loading Draft Log")
-                self.app_context.loading_overlay.update_status("Queuing file...")
+                self.app_context.loading_overlay.show(t("menu.overlay_loading_draft"))
+                self.app_context.loading_overlay.update_status(
+                    t("menu.overlay_queuing_file")
+                )
             self.app_context.orchestrator.set_file_and_scan(f)
 
     def _read_player_log(self):
-        f = filedialog.askopenfilename(filetypes=(("Log", "*.log"), ("All", "*.*")))
+        f = filedialog.askopenfilename(
+            filetypes=(
+                (t("menu.filter_log_files"), "*.log"),
+                (t("menu.filter_all_files"), "*.*"),
+            )
+        )
         if f:
             if hasattr(self.app_context, "loading_overlay"):
-                self.app_context.loading_overlay.show("Loading Player.log")
-                self.app_context.loading_overlay.update_status("Queuing file...")
+                self.app_context.loading_overlay.show(t("menu.overlay_loading_player"))
+                self.app_context.loading_overlay.update_status(
+                    t("menu.overlay_queuing_file")
+                )
             self.app_context.orchestrator.set_file_and_scan(f)
 
     def _locate_mtga_data(self):
-        folder = filedialog.askdirectory(title="Select MTGA_Data Folder")
+        folder = filedialog.askdirectory(title=t("menu.locate_select_folder_title"))
         if folder:
             if not folder.endswith("MTGA_Data"):
                 if os.path.exists(os.path.join(folder, "MTGA_Data")):
@@ -150,13 +172,13 @@ class AppMenuBar:
                     self.app_context._refresh_ui_data()
 
                 messagebox.showinfo(
-                    "Success",
-                    f"MTGA Data Folder successfully set to:\n{folder}\n\nYou can now download datasets!",
+                    t("dialog.success_title"),
+                    t("menu.locate_success_body", folder=folder),
                 )
             else:
                 messagebox.showerror(
-                    "Error",
-                    "Could not find 'Downloads/Raw' in the selected folder.\n\nPlease select the valid MTGA_Data folder.",
+                    t("dialog.error_title"),
+                    t("menu.locate_error_body"),
                 )
 
     def _export_csv(self):
@@ -174,7 +196,9 @@ class AppMenuBar:
         if f:
             with f:
                 f.write(data)
-            messagebox.showinfo("Success", "Export Complete.")
+            messagebox.showinfo(
+                t("dialog.success_title"), t("dialog.export_complete")
+            )
 
     def _export_json(self):
         h = self.app_context.orchestrator.scanner.retrieve_draft_history()
@@ -191,4 +215,6 @@ class AppMenuBar:
         if f:
             with f:
                 f.write(data)
-            messagebox.showinfo("Success", "Export Complete.")
+            messagebox.showinfo(
+                t("dialog.success_title"), t("dialog.export_complete")
+            )
