@@ -9,7 +9,7 @@ import tkinter
 from tkinter import ttk, messagebox, filedialog
 from typing import Callable, Dict, List, Tuple
 
-from src import constants
+from src import constants, i18n
 from src.configuration import Configuration, reset_configuration, write_configuration
 from src.ui.styles import Theme
 from src.ui.components import identify_safe_coordinates
@@ -49,15 +49,53 @@ class SettingsWindow(tkinter.Toplevel):
         container = ttk.Frame(self, padding=Theme.scaled_val(20))
         container.pack(fill="both", expand=True)
 
-        # --- SECTION: DATA FORMAT ---
+        # --- SECTION: LANGUAGE ---
         ttk.Label(
-            container, text="DATA EVALUATION", font=Theme.scaled_font(9, "bold")
+            container, text="LANGUAGE / 语言", font=Theme.scaled_font(9, "bold")
         ).grid(
             row=0, column=0, columnspan=2, sticky="w", pady=Theme.scaled_val((0, 10))
         )
 
-        ttk.Label(container, text="Win Rate Format:").grid(
+        ttk.Label(container, text="Display Language:").grid(
             row=1, column=0, sticky="e", padx=Theme.scaled_val(5)
+        )
+        self.vars["language"] = tkinter.StringVar()  # stores code: "zh_CN" / "en"
+        self._lang_display_var = tkinter.StringVar()  # stores label shown in dropdown
+        self._lang_display_to_code = {v: k for k, v in i18n.LANGUAGE_DISPLAY.items()}
+        lang_combo = ttk.Combobox(
+            container,
+            textvariable=self._lang_display_var,
+            values=list(i18n.LANGUAGE_DISPLAY.values()),
+            state="readonly",
+        )
+        lang_combo.grid(row=1, column=1, sticky="ew", pady=Theme.scaled_val(2))
+
+        # Mirror display label -> internal code on every change.
+        self._lang_display_var.trace_add(
+            "write",
+            lambda *_: self.vars["language"].set(
+                self._lang_display_to_code.get(
+                    self._lang_display_var.get(), self.vars["language"].get()
+                )
+            ),
+        )
+
+        ttk.Label(
+            container,
+            text="(Restart required / 需重启生效)",
+            font=Theme.scaled_font(8, "italic"),
+            foreground="gray",
+        ).grid(row=2, column=0, columnspan=2, sticky="w", padx=Theme.scaled_val(5))
+
+        # --- SECTION: DATA FORMAT ---
+        ttk.Label(
+            container, text="DATA EVALUATION", font=Theme.scaled_font(9, "bold")
+        ).grid(
+            row=3, column=0, columnspan=2, sticky="w", pady=Theme.scaled_val((15, 10))
+        )
+
+        ttk.Label(container, text="Win Rate Format:").grid(
+            row=4, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["result_format"] = tkinter.StringVar()
         fmt_om = ttk.OptionMenu(
@@ -67,10 +105,10 @@ class SettingsWindow(tkinter.Toplevel):
             *constants.RESULT_FORMAT_LIST,
             style="TMenubutton",
         )
-        fmt_om.grid(row=1, column=1, sticky="ew", pady=Theme.scaled_val(2))
+        fmt_om.grid(row=4, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
         ttk.Label(container, text="Deck Filter Format:").grid(
-            row=2, column=0, sticky="e", padx=Theme.scaled_val(5)
+            row=5, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["filter_format"] = tkinter.StringVar()
         filter_om = ttk.OptionMenu(
@@ -80,10 +118,10 @@ class SettingsWindow(tkinter.Toplevel):
             *constants.DECK_FILTER_FORMAT_LIST,
             style="TMenubutton",
         )
-        filter_om.grid(row=2, column=1, sticky="ew", pady=Theme.scaled_val(2))
+        filter_om.grid(row=5, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
         ttk.Label(container, text="UI Scale:").grid(
-            row=3, column=0, sticky="e", padx=Theme.scaled_val(5)
+            row=6, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["ui_size"] = tkinter.StringVar()
 
@@ -98,10 +136,10 @@ class SettingsWindow(tkinter.Toplevel):
             *size_options,
             style="TMenubutton",
         )
-        size_om.grid(row=3, column=1, sticky="ew", pady=Theme.scaled_val(2))
+        size_om.grid(row=6, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
         # --- SECTION: ADVISOR & HUD ---
-        r = 4
+        r = 7
         ttk.Label(
             container, text="INTELLIGENCE & HUD", font=Theme.scaled_font(9, "bold")
         ).grid(
@@ -178,6 +216,12 @@ class SettingsWindow(tkinter.Toplevel):
         self.vars["result_format"].set(s.result_format)
         self.vars["filter_format"].set(s.filter_format)
         self.vars["ui_size"].set(self.original_ui_size)
+
+        # Language: load code into vars["language"] and display label into the combo
+        self.vars["language"].set(s.language)
+        self._lang_display_var.set(
+            i18n.LANGUAGE_DISPLAY.get(s.language, i18n.LANGUAGE_DISPLAY[i18n.DEFAULT_LANG])
+        )
 
         # Paths
         self.vars["arena_log_location"].set(s.arena_log_location)

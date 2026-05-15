@@ -25,7 +25,7 @@ import argparse
 import os
 import sys
 import logging
-from src import constants
+from src import constants, i18n
 from src.configuration import read_configuration, write_configuration
 from src.limited_sets import LimitedSets
 from src.log_scanner import ArenaScanner
@@ -200,6 +200,10 @@ def main():
 
     # Load Config
     config, _ = read_configuration()
+
+    # Load localization catalog before any UI is built.
+    i18n.load(getattr(config.settings, "language", "zh_CN"))
+
     root = None
 
     def launch_ui(is_safe_mode=False):

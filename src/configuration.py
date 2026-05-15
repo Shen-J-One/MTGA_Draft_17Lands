@@ -100,6 +100,16 @@ class Settings(BaseModel):
     arena_log_location: str = ""
     database_location: str = ""
 
+    # Localization: 'zh_CN' or 'en'. Defaults to Chinese for this fork.
+    language: str = "zh_CN"
+
+    @field_validator("language")
+    @classmethod
+    def validate_language(cls, value, info):
+        if value not in ("zh_CN", "en"):
+            return cls.model_fields[info.field_name].default
+        return value
+
     @field_validator("deck_filter")
     @classmethod
     def validate_deck_filter(cls, value, info):

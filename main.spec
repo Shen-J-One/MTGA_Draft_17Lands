@@ -5,7 +5,10 @@ a = Analysis(
     ["main.py"],
     pathex=[],
     binaries=[],
-    datas=[("themes/*.tcl", "themes")],
+    datas=[
+        ("themes/*.tcl", "themes"),
+        ("src/locales/*.json", "src/locales"),
+    ],
     hiddenimports=[
         "jaraco.text",
         "platformdirs",
