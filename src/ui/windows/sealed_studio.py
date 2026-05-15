@@ -18,6 +18,7 @@ from PIL import Image, ImageTk
 from concurrent.futures import ThreadPoolExecutor
 
 from src import constants
+from src.i18n import t
 from src.configuration import Configuration
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -47,7 +48,7 @@ class SealedStudioWindow(tb.Toplevel):
         self.configuration = configuration
         self.metrics = metrics
 
-        self.title("Sealed Studio - MTGA Draft Tool")
+        self.title(t("sealed.title_window"))
 
         width = Theme.scaled_val(1400)
         height = Theme.scaled_val(900)
@@ -121,42 +122,42 @@ class SealedStudioWindow(tb.Toplevel):
 
         tb.Label(
             header,
-            text="SEALED STUDIO",
+            text=t("sealed.header_title"),
             font=Theme.scaled_font(18, "bold"),
             bootstyle="primary",
         ).pack(side="left")
 
         tb.Button(
             header,
-            text="🤖 Auto-Generate Shells",
+            text=t("sealed.btn_auto_generate"),
             bootstyle="success",
             command=self._on_auto_generate,
         ).pack(side="left", padx=Theme.scaled_val(20))
 
         tb.Button(
             header,
-            text="📥 Import Deck",
+            text=t("sealed.btn_import_deck"),
             bootstyle="info",
             command=self._import_deck_from_clipboard,
         ).pack(side="left", padx=Theme.scaled_val(10))
 
         tb.Button(
             header,
-            text="📋 Copy MTGA Format",
+            text=t("sealed.btn_copy_mtga"),
             bootstyle="info-outline",
             command=self._export_active_deck,
         ).pack(side="right", padx=Theme.scaled_val(5))
 
         tb.Button(
             header,
-            text="🌐 Export to Sealeddeck.tech",
+            text=t("sealed.btn_export_sealeddeck"),
             bootstyle="warning-outline",
             command=self._export_to_sealeddeck_tech,
         ).pack(side="right", padx=Theme.scaled_val(5))
 
         self.btn_view_toggle = tb.Button(
             header,
-            text="👁️ Switch to List View",
+            text=t("sealed.btn_to_list_view"),
             bootstyle="secondary-outline",
             command=self._toggle_view,
         )
@@ -196,11 +197,11 @@ class SealedStudioWindow(tb.Toplevel):
                 pass
 
         if self.view_mode == "list":
-            self.btn_view_toggle.config(text="👁️ Switch to Visual View")
+            self.btn_view_toggle.config(text=t("sealed.btn_to_visual_view"))
             self.container.add(self.list_pane_left, weight=1)
             self.container.add(self.list_pane_right, weight=1)
         else:
-            self.btn_view_toggle.config(text="👁️ Switch to List View")
+            self.btn_view_toggle.config(text=t("sealed.btn_to_list_view"))
             self.container.add(self.visual_pane, weight=1)
 
     def _build_list_view(self):
@@ -209,14 +210,14 @@ class SealedStudioWindow(tb.Toplevel):
         pool_header.pack(fill="x", pady=Theme.scaled_val((0, 5)))
 
         self.lbl_pool_title_list = tb.Label(
-            pool_header, text="MASTER POOL (0)", font=Theme.scaled_font(12, "bold")
+            pool_header, text=t("sealed.master_pool_initial"), font=Theme.scaled_font(12, "bold")
         )
         self.lbl_pool_title_list.pack(side="left")
 
         filter_frame = tb.Frame(pool_header)
         filter_frame.pack(side="right")
 
-        tb.Label(filter_frame, text="Sort:").pack(side="left", padx=2)
+        tb.Label(filter_frame, text=t("sealed.sort_label")).pack(side="left", padx=2)
         sort_cb = tb.Combobox(
             filter_frame,
             textvariable=self.pool_sort_var,
@@ -230,19 +231,19 @@ class SealedStudioWindow(tb.Toplevel):
 
         tb.Checkbutton(
             filter_frame,
-            text="Creatures",
+            text=t("sealed.filter_creatures"),
             variable=self.filter_vars["creatures"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
         tb.Checkbutton(
             filter_frame,
-            text="Spells",
+            text=t("sealed.filter_spells"),
             variable=self.filter_vars["spells"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
         tb.Checkbutton(
             filter_frame,
-            text="Lands",
+            text=t("sealed.filter_lands"),
             variable=self.filter_vars["lands"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
@@ -312,7 +313,7 @@ class SealedStudioWindow(tb.Toplevel):
 
         self.lbl_deck_title_list = tb.Label(
             deck_controls,
-            text="ACTIVE DECK (0)",
+            text=t("sealed.active_deck_initial"),
             font=Theme.scaled_font(12, "bold"),
             bootstyle="success",
         )
@@ -320,27 +321,27 @@ class SealedStudioWindow(tb.Toplevel):
 
         tb.Button(
             deck_controls,
-            text="Auto-Lands",
+            text=t("custom.btn_auto_lands"),
             bootstyle="warning",
             command=self._apply_auto_lands,
         ).pack(side="left", padx=Theme.scaled_val(10))
 
         tb.Button(
             deck_controls,
-            text="Clear",
+            text=t("custom.btn_clear"),
             bootstyle="danger-outline",
             command=self._clear_deck,
         ).pack(side="left", padx=5)
         tb.Button(
             deck_controls,
-            text="Add All",
+            text=t("sealed.btn_add_all"),
             bootstyle="secondary-outline",
             command=self._add_all_to_deck,
         ).pack(side="left", padx=5)
 
         sort_frame = tb.Frame(deck_controls)
         sort_frame.pack(side="left", padx=Theme.scaled_val(15))
-        tb.Label(sort_frame, text="Sort:").pack(side="left", padx=2)
+        tb.Label(sort_frame, text=t("sealed.sort_label")).pack(side="left", padx=2)
         deck_sort_cb = tb.Combobox(
             sort_frame,
             textvariable=self.deck_sort_var,
@@ -431,7 +432,7 @@ class SealedStudioWindow(tb.Toplevel):
 
         self.lbl_deck_title_vis = tb.Label(
             deck_controls,
-            text="ACTIVE DECK (0)",
+            text=t("sealed.active_deck_initial"),
             font=Theme.scaled_font(12, "bold"),
             bootstyle="success",
         )
@@ -439,27 +440,27 @@ class SealedStudioWindow(tb.Toplevel):
 
         tb.Button(
             deck_controls,
-            text="Auto-Lands",
+            text=t("custom.btn_auto_lands"),
             bootstyle="warning",
             command=self._apply_auto_lands,
         ).pack(side="left", padx=Theme.scaled_val(10))
 
         tb.Button(
             deck_controls,
-            text="Clear",
+            text=t("custom.btn_clear"),
             bootstyle="danger-outline",
             command=self._clear_deck,
         ).pack(side="left", padx=5)
         tb.Button(
             deck_controls,
-            text="Add All",
+            text=t("sealed.btn_add_all"),
             bootstyle="secondary-outline",
             command=self._add_all_to_deck,
         ).pack(side="left", padx=5)
 
         sort_frame = tb.Frame(deck_controls)
         sort_frame.pack(side="left", padx=Theme.scaled_val(15))
-        tb.Label(sort_frame, text="Sort:").pack(side="left", padx=2)
+        tb.Label(sort_frame, text=t("sealed.sort_label")).pack(side="left", padx=2)
         deck_sort_cb = tb.Combobox(
             sort_frame,
             textvariable=self.deck_sort_var,
@@ -515,14 +516,14 @@ class SealedStudioWindow(tb.Toplevel):
         pool_header.pack(fill="x", pady=Theme.scaled_val(5))
 
         self.lbl_pool_title_vis = tb.Label(
-            pool_header, text="MASTER POOL (0)", font=Theme.scaled_font(12, "bold")
+            pool_header, text=t("sealed.master_pool_initial"), font=Theme.scaled_font(12, "bold")
         )
         self.lbl_pool_title_vis.pack(side="left")
 
         filter_frame = tb.Frame(pool_header)
         filter_frame.pack(side="right")
 
-        tb.Label(filter_frame, text="Sort:").pack(side="left", padx=2)
+        tb.Label(filter_frame, text=t("sealed.sort_label")).pack(side="left", padx=2)
         sort_cb = tb.Combobox(
             filter_frame,
             textvariable=self.pool_sort_var,
@@ -536,19 +537,19 @@ class SealedStudioWindow(tb.Toplevel):
 
         tb.Checkbutton(
             filter_frame,
-            text="Creatures",
+            text=t("sealed.filter_creatures"),
             variable=self.filter_vars["creatures"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
         tb.Checkbutton(
             filter_frame,
-            text="Spells",
+            text=t("sealed.filter_spells"),
             variable=self.filter_vars["spells"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
         tb.Checkbutton(
             filter_frame,
-            text="Lands",
+            text=t("sealed.filter_lands"),
             variable=self.filter_vars["lands"],
             command=self._refresh_data,
         ).pack(side="left", padx=2)
@@ -620,7 +621,7 @@ class SealedStudioWindow(tb.Toplevel):
 
     def _build_hud(self, parent):
         self.hud_frame = tb.Labelframe(
-            parent, text=" DECK ANALYTICS ", padding=Theme.scaled_val(10)
+            parent, text=t("sealed.frame_analytics"), padding=Theme.scaled_val(10)
         )
         self.hud_frame.pack(fill="x", side="bottom", pady=Theme.scaled_val((10, 0)))
         self.hud_frame.columnconfigure(0, weight=1)
@@ -631,13 +632,13 @@ class SealedStudioWindow(tb.Toplevel):
         comp_frame.grid(row=0, column=0, sticky="nw")
         tb.Label(
             comp_frame,
-            text="COMPOSITION",
+            text=t("sealed.panel_composition"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
         self.lbl_comp_stats = tb.Label(
             comp_frame,
-            text="Creatures: 0\nSpells: 0\nLands: 0",
+            text=t("sealed.composition_stats"),
             font=Theme.scaled_font(9),
         )
         self.lbl_comp_stats.pack(anchor="w", pady=Theme.scaled_val(5))
@@ -646,7 +647,7 @@ class SealedStudioWindow(tb.Toplevel):
         curve_frame.grid(row=0, column=1, sticky="nsew")
         tb.Label(
             curve_frame,
-            text="MANA CURVE",
+            text=t("sealed.panel_curve"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
@@ -660,7 +661,7 @@ class SealedStudioWindow(tb.Toplevel):
         color_frame.grid(row=0, column=2, sticky="nsew")
         tb.Label(
             color_frame,
-            text="BALANCE",
+            text=t("sealed.panel_balance"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
@@ -673,7 +674,9 @@ class SealedStudioWindow(tb.Toplevel):
 
     def _create_new_tab(self):
         name = simpledialog.askstring(
-            "New Deck", "Enter a name for the new deck variant:", parent=self
+            t("sealed.dialog_new_deck_title"),
+            t("sealed.dialog_new_deck_body"),
+            parent=self,
         )
         if name:
             self.session.create_variant(name)
@@ -682,8 +685,8 @@ class SealedStudioWindow(tb.Toplevel):
     def _rename_tab(self):
         if self.session.active_variant_name:
             new_name = simpledialog.askstring(
-                "Rename Deck",
-                "Enter new name:",
+                t("sealed.dialog_rename_title"),
+                t("sealed.dialog_rename_body"),
                 initialvalue=self.session.active_variant_name,
                 parent=self,
             )
@@ -695,15 +698,20 @@ class SealedStudioWindow(tb.Toplevel):
     def _delete_tab(self):
         if len(self.session.variants) > 1:
             if messagebox.askyesno(
-                "Delete",
-                f"Are you sure you want to delete '{self.session.active_variant_name}'?",
+                t("sealed.dialog_delete_title"),
+                t(
+                    "sealed.dialog_delete_body",
+                    name=self.session.active_variant_name,
+                ),
                 parent=self,
             ):
                 self.session.delete_variant(self.session.active_variant_name)
                 self._refresh_tabs()
         else:
             messagebox.showwarning(
-                "Cannot Delete", "You must have at least one deck variant.", parent=self
+                t("sealed.cannot_delete_title"),
+                t("sealed.cannot_delete_body"),
+                parent=self,
             )
 
     def _refresh_tabs(self):
@@ -746,11 +754,11 @@ class SealedStudioWindow(tb.Toplevel):
 
     def _on_auto_generate(self):
         self.lbl_deck_title_list.config(
-            text="GENERATING SHELLS...", bootstyle="warning"
+            text=t("sealed.generating_shells"), bootstyle="warning"
         )
         if hasattr(self, "lbl_deck_title_vis"):
             self.lbl_deck_title_vis.config(
-                text="GENERATING SHELLS...", bootstyle="warning"
+                text=t("sealed.generating_shells"), bootstyle="warning"
             )
         self.update_idletasks()
 
@@ -781,17 +789,22 @@ class SealedStudioWindow(tb.Toplevel):
         pool_count = sum(c.get("count", 1) for c in sideboard)
         deck_count = sum(c.get("count", 1) for c in main_deck)
 
-        self.lbl_pool_title_list.config(text=f"MASTER POOL ({pool_count})")
+        self.lbl_pool_title_list.config(
+            text=t("sealed.master_pool_dynamic", n=pool_count)
+        )
         if hasattr(self, "lbl_pool_title_vis"):
-            self.lbl_pool_title_vis.config(text=f"MASTER POOL ({pool_count})")
+            self.lbl_pool_title_vis.config(
+                text=t("sealed.master_pool_dynamic", n=pool_count)
+            )
 
         deck_style = "success" if deck_count == 40 else "warning"
         self.lbl_deck_title_list.config(
-            text=f"ACTIVE DECK ({deck_count})", bootstyle=deck_style
+            text=t("sealed.active_deck_dynamic", n=deck_count), bootstyle=deck_style
         )
         if hasattr(self, "lbl_deck_title_vis"):
             self.lbl_deck_title_vis.config(
-                text=f"ACTIVE DECK ({deck_count})", bootstyle=deck_style
+                text=t("sealed.active_deck_dynamic", n=deck_count),
+                bootstyle=deck_style,
             )
 
         show_c, show_s, show_l = (
@@ -1536,8 +1549,8 @@ class SealedStudioWindow(tb.Toplevel):
 
             if not deck_cards:
                 messagebox.showwarning(
-                    "Import Failed",
-                    "No valid MTGA format cards found in clipboard.",
+                    t("sealed.import_failed_title"),
+                    t("sealed.import_no_valid_cards"),
                     parent=self,
                 )
                 return
@@ -1562,18 +1575,29 @@ class SealedStudioWindow(tb.Toplevel):
             self._refresh_data()
 
             if missing_cards:
-                msg = "Deck imported, but the following cards were skipped because they are not in your pool (or you exceeded your owned quantity limits):\n\n"
+                msg = t("sealed.partial_import_body_prefix")
                 msg += ", ".join(missing_cards[:10])
                 if len(missing_cards) > 10:
-                    msg += f" ...and {len(missing_cards) - 10} more."
-                messagebox.showwarning("Partial Import", msg, parent=self)
+                    msg += t(
+                        "sealed.partial_import_more_suffix",
+                        n=len(missing_cards) - 10,
+                    )
+                messagebox.showwarning(
+                    t("sealed.partial_import_title"), msg, parent=self
+                )
             else:
                 messagebox.showinfo(
-                    "Success", "Deck imported successfully!", parent=self
+                    t("sealed.import_success_title"),
+                    t("sealed.import_success_body"),
+                    parent=self,
                 )
 
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to import deck: {e}", parent=self)
+            messagebox.showerror(
+                t("dialog.error_title"),
+                t("sealed.import_failed_body", e=e),
+                parent=self,
+            )
 
     def _export_active_deck(self):
         main_deck, sideboard = self.session.get_active_deck_lists()
@@ -1581,7 +1605,9 @@ class SealedStudioWindow(tb.Toplevel):
         self.clipboard_clear()
         self.clipboard_append(export_text)
         messagebox.showinfo(
-            "Export Successful", "Deck copied to clipboard in MTGA format!", parent=self
+            t("sealed.export_success_title"),
+            t("sealed.export_success_body"),
+            parent=self,
         )
 
     def _export_to_sealeddeck_tech(self):
@@ -1593,7 +1619,7 @@ class SealedStudioWindow(tb.Toplevel):
             if self.view_mode == "visual"
             else self.lbl_deck_title_list
         )
-        lbl.config(text="EXPORTING TO BROWSER...", bootstyle="warning")
+        lbl.config(text=t("sealed.exporting_browser"), bootstyle="warning")
         self.update_idletasks()
 
         import threading
@@ -1620,8 +1646,8 @@ class SealedStudioWindow(tb.Toplevel):
                     self.clipboard_clear()
                     self.clipboard_append(mtga_payload)
                     messagebox.showwarning(
-                        "API Error",
-                        "Could not reach Sealeddeck.tech automatically.\n\nYour deck has been copied to the clipboard. You can paste it manually at sealeddeck.tech.",
+                        t("sealed.api_error_title"),
+                        t("sealed.api_error_body"),
                         parent=self,
                     )
 
