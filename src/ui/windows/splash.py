@@ -82,6 +82,13 @@ class SplashWindow:
             text=t("app.splash_version", version=constants.APPLICATION_VERSION),
             font=Theme.scaled_font(9),
             foreground=Theme.TEXT_MAIN,
+        ).pack(pady=(0, Theme.scaled_val(4)))
+
+        ttk.Label(
+            container,
+            text="中文本地化 by Shen-J-One",
+            font=Theme.scaled_font(8, "italic"),
+            foreground=Theme.TEXT_MUTED,
         ).pack(pady=(0, Theme.scaled_val(15)))
 
         self.progress = ttk.Progressbar(container, mode="indeterminate", length=250)
