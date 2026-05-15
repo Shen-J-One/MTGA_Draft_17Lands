@@ -10,6 +10,7 @@ from tkinter import ttk, messagebox, filedialog
 from typing import Callable, Dict, List, Tuple
 
 from src import constants, i18n
+from src.i18n import t
 from src.configuration import Configuration, reset_configuration, write_configuration
 from src.ui.styles import Theme
 from src.ui.components import identify_safe_coordinates
@@ -23,7 +24,7 @@ class SettingsWindow(tkinter.Toplevel):
         self.configuration = configuration
         self.on_update_callback = on_update_callback
 
-        self.title("Preferences")
+        self.title(t("settings.title"))
         self.resizable(False, False)
         self.transient(parent)  # Keeps window on top of main app
 
@@ -89,12 +90,12 @@ class SettingsWindow(tkinter.Toplevel):
 
         # --- SECTION: DATA FORMAT ---
         ttk.Label(
-            container, text="DATA EVALUATION", font=Theme.scaled_font(9, "bold")
+            container, text=t("settings.section_data"), font=Theme.scaled_font(9, "bold")
         ).grid(
             row=3, column=0, columnspan=2, sticky="w", pady=Theme.scaled_val((15, 10))
         )
 
-        ttk.Label(container, text="Win Rate Format:").grid(
+        ttk.Label(container, text=t("settings.win_rate_format")).grid(
             row=4, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["result_format"] = tkinter.StringVar()
@@ -107,7 +108,7 @@ class SettingsWindow(tkinter.Toplevel):
         )
         fmt_om.grid(row=4, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
-        ttk.Label(container, text="Deck Filter Format:").grid(
+        ttk.Label(container, text=t("settings.deck_filter_format")).grid(
             row=5, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["filter_format"] = tkinter.StringVar()
@@ -120,7 +121,7 @@ class SettingsWindow(tkinter.Toplevel):
         )
         filter_om.grid(row=5, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
-        ttk.Label(container, text="UI Scale:").grid(
+        ttk.Label(container, text=t("settings.ui_scale")).grid(
             row=6, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["ui_size"] = tkinter.StringVar()
@@ -141,18 +142,20 @@ class SettingsWindow(tkinter.Toplevel):
         # --- SECTION: ADVISOR & HUD ---
         r = 7
         ttk.Label(
-            container, text="INTELLIGENCE & HUD", font=Theme.scaled_font(9, "bold")
+            container,
+            text=t("settings.section_intelligence"),
+            font=Theme.scaled_font(9, "bold"),
         ).grid(
             row=r, column=0, columnspan=2, sticky="w", pady=Theme.scaled_val((20, 10))
         )
 
         features = [
-            ("Always On Top", "always_on_top"),
-            ("Auto-Sync Cloud Datasets", "auto_sync_datasets"),
-            ("Highlight Row by Mana Cost", "card_colors_enabled"),
-            ("Check for Dataset Updates", "update_notifications_enabled"),
-            ("Alert on Missing Datasets", "missing_notifications_enabled"),
-            ("Enable Draft Log Creation", "draft_log_enabled"),
+            (t("settings.always_on_top"), "always_on_top"),
+            (t("settings.auto_sync_datasets"), "auto_sync_datasets"),
+            (t("settings.highlight_row_mana"), "card_colors_enabled"),
+            (t("settings.check_dataset_updates"), "update_notifications_enabled"),
+            (t("settings.alert_missing_datasets"), "missing_notifications_enabled"),
+            (t("settings.enable_draft_log"), "draft_log_enabled"),
         ]
 
         for i, (label, key) in enumerate(features):
@@ -171,13 +174,15 @@ class SettingsWindow(tkinter.Toplevel):
 
         # --- SECTION: SYSTEM PATHS ---
         ttk.Label(
-            container, text="SYSTEM PATHS", font=Theme.scaled_font(9, "bold")
+            container,
+            text=t("settings.section_paths"),
+            font=Theme.scaled_font(9, "bold"),
         ).grid(
             row=r, column=0, columnspan=2, sticky="w", pady=Theme.scaled_val((20, 10))
         )
         r += 1
 
-        ttk.Label(container, text="Player.log Location:").grid(
+        ttk.Label(container, text=t("settings.player_log_location")).grid(
             row=r, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["arena_log_location"] = tkinter.StringVar()
@@ -186,7 +191,7 @@ class SettingsWindow(tkinter.Toplevel):
         ).grid(row=r, column=1, sticky="w", pady=Theme.scaled_val(2))
         r += 1
 
-        ttk.Label(container, text="MTGA_Data Location:").grid(
+        ttk.Label(container, text=t("settings.mtga_data_location")).grid(
             row=r, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         self.vars["database_location"] = tkinter.StringVar()
@@ -201,10 +206,12 @@ class SettingsWindow(tkinter.Toplevel):
             row=50, column=0, columnspan=2, pady=Theme.scaled_val((25, 0)), sticky="ew"
         )
 
-        ttk.Button(footer, text="Restore Defaults", command=self._reset_defaults).pack(
-            side="left"
+        ttk.Button(
+            footer, text=t("settings.restore_defaults"), command=self._reset_defaults
+        ).pack(side="left")
+        ttk.Button(footer, text=t("settings.done"), command=self._on_close).pack(
+            side="right"
         )
-        ttk.Button(footer, text="Done", command=self._on_close).pack(side="right")
 
     def _load_settings(self):
         """Populates UI from the configuration object."""
@@ -286,7 +293,9 @@ class SettingsWindow(tkinter.Toplevel):
 
     def _reset_defaults(self):
         """Restores pro-level baseline configuration."""
-        if messagebox.askyesno("Confirm Reset", "Restore all settings to default?"):
+        if messagebox.askyesno(
+            t("settings.confirm_reset_title"), t("settings.confirm_reset_body")
+        ):
             reset_configuration()
             from src.configuration import read_configuration
 
