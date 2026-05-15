@@ -1,6 +1,6 @@
 # MTGA_Draft_17Lands
 
-> **🇨🇳 中文本地化分支** by [@Shen-J-One](https://github.com/Shen-J-One)
+> **🇨🇳 中文本地化分支** by Shen-J-One and Tissesort
 >
 > 这是基于上游 [unrealities/MTGA_Draft_17Lands](https://github.com/unrealities/MTGA_Draft_17Lands) 的中文本地化分支。
 > 默认中文界面;可在 `File → Preferences → LANGUAGE / 语言` 切换回英文。

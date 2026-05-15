@@ -86,7 +86,7 @@ class SplashWindow:
 
         ttk.Label(
             container,
-            text="中文本地化 by Shen-J-One",
+            text="中文本地化 by Shen-J-One and Tissesort",
             font=Theme.scaled_font(8, "italic"),
             foreground=Theme.TEXT_MUTED,
         ).pack(pady=(0, Theme.scaled_val(15)))
