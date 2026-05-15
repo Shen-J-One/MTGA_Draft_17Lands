@@ -8,6 +8,7 @@ import tkinter
 from tkinter import ttk
 import threading
 from src import constants
+from src.i18n import t
 from src.ui.styles import Theme
 from src.utils import open_file
 from src.ui.components import ManaCurvePlot, TypePieChart
@@ -49,19 +50,19 @@ class DraftRecapScreen(ttk.Frame):
 
         self.lbl_recovery_title = ttk.Label(
             header_frame,
-            text="Draft Completed",
+            text=t("recap.draft_completed"),
             font=Theme.scaled_font(18, "bold"),
             bootstyle="success",
         )
         self.lbl_recovery_title.pack(side="left")
 
         self.btn_17lands_link = ttk.Button(
-            header_frame, text="View Draft on 17Lands 🌐", bootstyle="info-outline"
+            header_frame, text=t("recap.view_on_17lands"), bootstyle="info-outline"
         )
 
         self.btn_sealed_studio = ttk.Button(
             header_frame,
-            text="⚔️ Enter Sealed Studio",
+            text=t("recap.enter_sealed_studio"),
             bootstyle="warning",
             command=self.launch_sealed_callback,
         )
@@ -78,21 +79,23 @@ class DraftRecapScreen(ttk.Frame):
 
         # --- TAB 1: DRAFT RECAP ---
         tab_recap = ttk.Frame(self.recap_notebook, padding=Theme.scaled_val(15))
-        self.recap_notebook.add(tab_recap, text=" 🏆 Draft Recap ")
+        self.recap_notebook.add(tab_recap, text=t("recap.tab_recap"))
 
         top_recap = ttk.Frame(tab_recap)
         top_recap.pack(fill="x", pady=Theme.scaled_val((0, 10)))
 
         self.lbl_recovery_grade = ttk.Label(
             top_recap,
-            text="Pool Power Grade: --",
+            text=t("recap.pool_grade_initial"),
             font=Theme.scaled_font(16, "bold"),
             bootstyle="primary",
         )
         self.lbl_recovery_grade.pack(anchor="center", pady=Theme.scaled_val((0, 2)))
 
         self.lbl_recovery_stats = ttk.Label(
-            top_recap, text="Top 23 Cards Avg Win Rate: --%", font=Theme.scaled_font(11)
+            top_recap,
+            text=t("recap.top23_initial"),
+            font=Theme.scaled_font(11),
         )
         self.lbl_recovery_stats.pack(anchor="center")
 
@@ -106,21 +109,21 @@ class DraftRecapScreen(ttk.Frame):
         grid_recap.rowconfigure((0, 1), weight=1)
 
         self._create_stat_box(
-            grid_recap, "TOP ARCHETYPES", "lbl_recap_archetypes"
+            grid_recap, t("recap.box_top_archetypes"), "lbl_recap_archetypes"
         ).grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        self._create_stat_box(grid_recap, "BEST CARDS DRAFTED", "lbl_recap_best").grid(
-            row=0, column=1, sticky="nsew", padx=5, pady=5
-        )
         self._create_stat_box(
-            grid_recap, "BIGGEST STEALS (LATE PICKS)", "lbl_recap_steals"
+            grid_recap, t("recap.box_best_cards"), "lbl_recap_best"
+        ).grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+        self._create_stat_box(
+            grid_recap, t("recap.box_steals"), "lbl_recap_steals"
         ).grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self._create_stat_box(
-            grid_recap, "BIGGEST REACHES (EARLY PICKS)", "lbl_recap_reaches"
+            grid_recap, t("recap.box_reaches"), "lbl_recap_reaches"
         ).grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
 
         # --- TAB 2: SYNERGY & ROLES ---
         tab_synergy = ttk.Frame(self.recap_notebook, padding=Theme.scaled_val(15))
-        self.recap_notebook.add(tab_synergy, text=" 🧩 Synergy & Roles ")
+        self.recap_notebook.add(tab_synergy, text=t("recap.tab_synergy"))
 
         grid_synergy = ttk.Frame(tab_synergy)
         grid_synergy.pack(fill="both", expand=True)
@@ -128,21 +131,21 @@ class DraftRecapScreen(ttk.Frame):
         grid_synergy.rowconfigure((0, 1), weight=1)
 
         self._create_stat_box(
-            grid_synergy, "TOP CREATURE TYPES", "lbl_synergy_tribes"
+            grid_synergy, t("recap.box_creature_types"), "lbl_synergy_tribes"
         ).grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        self._create_stat_box(grid_synergy, "CARD ROLES", "lbl_synergy_roles").grid(
-            row=0, column=1, sticky="nsew", padx=5, pady=5
-        )
         self._create_stat_box(
-            grid_synergy, "PREMIUM STAPLES", "lbl_synergy_staples"
+            grid_synergy, t("recap.box_card_roles"), "lbl_synergy_roles"
+        ).grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+        self._create_stat_box(
+            grid_synergy, t("recap.box_staples"), "lbl_synergy_staples"
         ).grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self._create_stat_box(
-            grid_synergy, "NON-BASIC LANDS", "lbl_synergy_lands"
+            grid_synergy, t("recap.box_non_basic_lands"), "lbl_synergy_lands"
         ).grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
 
         # --- TAB 3: MANA & CURVE ---
         tab_analysis = ttk.Frame(self.recap_notebook, padding=Theme.scaled_val(15))
-        self.recap_notebook.add(tab_analysis, text=" 📊 Mana & Curve ")
+        self.recap_notebook.add(tab_analysis, text=t("recap.tab_mana"))
         tab_analysis.columnconfigure((0, 1), weight=1)
         tab_analysis.rowconfigure(0, weight=1)
 
@@ -153,7 +156,7 @@ class DraftRecapScreen(ttk.Frame):
 
         ttk.Label(
             charts_frame,
-            text="MANA CURVE",
+            text=t("dashboard.panel_mana_curve"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=Theme.scaled_val((0, 5)))
@@ -162,7 +165,7 @@ class DraftRecapScreen(ttk.Frame):
 
         ttk.Label(
             charts_frame,
-            text="POOL BALANCE",
+            text=t("dashboard.panel_pool_balance"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=Theme.scaled_val((0, 5)))
@@ -171,9 +174,9 @@ class DraftRecapScreen(ttk.Frame):
 
         stats_col = ttk.Frame(tab_analysis)
         stats_col.grid(row=0, column=1, sticky="nsew")
-        self._create_stat_box(stats_col, "RARES & MYTHICS", "lbl_recap_rares").pack(
-            fill="both", expand=True, pady=Theme.scaled_val((0, 10))
-        )
+        self._create_stat_box(
+            stats_col, t("recap.box_rares_mythics"), "lbl_recap_rares"
+        ).pack(fill="both", expand=True, pady=Theme.scaled_val((0, 10)))
 
     def update_summary(self, taken_cards, metrics, draft_id, event_type):
         if not taken_cards or len(taken_cards) < 40:
@@ -213,24 +216,26 @@ class DraftRecapScreen(ttk.Frame):
         pool_power = max(0, min(100, 75.0 + (z_score * 12.0)))
 
         grade_map = [
-            (90, "S (God Tier)", "success"),
-            (85, "A (Amazing)", "success"),
-            (80, "B+ (Great)", "info"),
-            (75, "B (Good)", "info"),
-            (70, "C (Average)", "warning"),
-            (60, "D (Below Average)", "danger"),
+            (90, t("recap.grade_s"), "success"),
+            (85, t("recap.grade_a"), "success"),
+            (80, t("recap.grade_bplus"), "info"),
+            (75, t("recap.grade_b"), "info"),
+            (70, t("recap.grade_c"), "warning"),
+            (60, t("recap.grade_d"), "danger"),
         ]
         grade_str, bootstyle = next(
             ((g, s) for threshold, g, s in grade_map if pool_power >= threshold),
-            ("F (Trainwreck)", "danger"),
+            (t("recap.grade_f"), "danger"),
         )
 
         self.lbl_recovery_grade.config(
-            text=f"Pool Quality: {pool_power:.0f}/100 [{grade_str}]",
+            text=t("recap.pool_grade_filled", p=pool_power, grade=grade_str),
             bootstyle=bootstyle,
         )
         self.lbl_recovery_stats.config(
-            text=f"Top 23 Avg Win Rate: {avg_gihwr:.1f}% (Format Avg: {global_mean:.1f}%)"
+            text=t(
+                "recap.top23_filled", w=avg_gihwr, m=global_mean
+            )
         )
 
         # 2. TOP ARCHETYPES
@@ -248,7 +253,7 @@ class DraftRecapScreen(ttk.Frame):
             [f"• {n} ({w:.1f}%)\n" if w > 0 else f"• {n}\n" for n, w in arch_data[:3]]
         )
         self.lbl_recap_archetypes.config(
-            text=arch_text if arch_text else "None Identified"
+            text=arch_text if arch_text else t("recap.none_identified")
         )
 
         # 3. BEST CARDS
@@ -300,7 +305,7 @@ class DraftRecapScreen(ttk.Frame):
                     for n, pa, pi, a, d in steals[:6]
                 ]
             )
-            or "No major steals detected."
+            or t("recap.no_steals")
         )
         self.lbl_recap_reaches.config(
             text="".join(
@@ -309,7 +314,7 @@ class DraftRecapScreen(ttk.Frame):
                     for n, pa, pi, a, d in reaches[:6]
                 ]
             )
-            or "No major reaches detected."
+            or t("recap.no_reaches")
         )
 
         # 5. SYNERGY & ROLES
@@ -322,25 +327,25 @@ class DraftRecapScreen(ttk.Frame):
             if "Creature" in c.get("types", []):
                 for s in c.get("subtypes", []):
                     subs_counts[s] = subs_counts.get(s, 0) + 1
-            for t in c.get("tags", []):
-                tags_count[t] = tags_count.get(t, 0) + 1
+            for tag in c.get("tags", []):
+                tags_count[tag] = tags_count.get(tag, 0) + 1
 
         top_tribes = sorted(subs_counts.items(), key=lambda x: x[1], reverse=True)
         self.lbl_synergy_tribes.config(
-            text="".join([f"• {t} ({c})\n" for t, c in top_tribes[:6] if c >= 3])
-            or "No creature types with 3+ cards."
+            text="".join([f"• {tt} ({c})\n" for tt, c in top_tribes[:6] if c >= 3])
+            or t("recap.no_creature_types")
         )
 
         self.lbl_synergy_roles.config(
             text="".join(
                 [
-                    f"• {constants.TAG_VISUALS.get(t, t.capitalize())} ({c})\n"
-                    for t, c in sorted(
+                    f"• {constants.TAG_VISUALS.get(tag, tag.capitalize())} ({c})\n"
+                    for tag, c in sorted(
                         tags_count.items(), key=lambda x: x[1], reverse=True
                     )[:6]
                 ]
             )
-            or "No Scryfall tags matched."
+            or t("recap.no_tags_matched")
         )
 
         staples = [
@@ -354,7 +359,7 @@ class DraftRecapScreen(ttk.Frame):
             text="".join(
                 [f"• {c.get('name')} ({get_gihwr(c):.1f}%)\n" for c in staples[:6]]
             )
-            or "No premium staples drafted."
+            or t("recap.no_staples")
         )
 
         non_basics.sort(key=get_gihwr, reverse=True)
@@ -362,7 +367,7 @@ class DraftRecapScreen(ttk.Frame):
             text="".join(
                 [f"• {c.get('name')} ({get_gihwr(c):.1f}%)\n" for c in non_basics[:6]]
             )
-            or "No non-basic lands drafted."
+            or t("recap.no_non_basics")
         )
 
         # 6. RARES & MYTHICS
@@ -376,7 +381,7 @@ class DraftRecapScreen(ttk.Frame):
             text="".join(
                 [f"• {c.get('name')} ({get_gihwr(c):.1f}%)\n" for c in rares[:10]]
             )
-            or "No Rares or Mythics drafted."
+            or t("recap.no_rares")
         )
 
         # 7. CHARTS
@@ -397,7 +402,7 @@ class DraftRecapScreen(ttk.Frame):
             types = card.get("types", [])
             if "Basic" in types or card.get("name") in constants.BASIC_LANDS:
                 continue
-            for t in [
+            for type_name in [
                 "Creature",
                 "Planeswalker",
                 "Battle",
@@ -407,8 +412,8 @@ class DraftRecapScreen(ttk.Frame):
                 "Artifact",
                 "Land",
             ]:
-                if t in types:
-                    type_counts[t] += 1
+                if type_name in types:
+                    type_counts[type_name] += 1
         self.recap_type_chart.update_counts(type_counts)
 
         # 8. SEALED STUDIO BTN
@@ -429,7 +434,7 @@ class DraftRecapScreen(ttk.Frame):
                     if record and record.get("wins") is not None:
                         w, l = record["wins"], record["losses"]
                         self.lbl_actual_record.config(
-                            text=f"Actual 17Lands Record: {w} Wins - {l} Losses",
+                            text=t("recap.actual_record", w=w, l=l),
                             bootstyle=(
                                 "success"
                                 if w >= 3

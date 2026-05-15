@@ -12,6 +12,7 @@ import threading
 import json
 
 from src import constants
+from src.i18n import t
 from src.card_logic import field_process_sort, row_color_tag
 from src.ui.styles import Theme
 from src.utils import open_file
@@ -99,27 +100,21 @@ class DashboardFrame(ttk.Frame):
 
         ttk.Label(
             tips_frame,
-            text="✨ Personalize Your Experience",
+            text=t("dashboard.tips_header"),
             font=Theme.scaled_font(11, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=(0, Theme.scaled_val(8)))
 
         tips = [
+            (t("dashboard.tip_theme_title"), t("dashboard.tip_theme_body")),
+            (t("dashboard.tip_columns_title"), t("dashboard.tip_columns_body")),
             (
-                "🎨 Themes & Mana Flairs:",
-                "Use the 'Theme' menu at the very top of the window to select Magic-inspired color palettes.",
+                t("dashboard.tip_custom_install_title"),
+                t("dashboard.tip_custom_install_body"),
             ),
             (
-                "📊 Custom Columns:",
-                "Right-click any table header (like 'GIH WR' or 'NAME') to re-arrange, add, or remove stats. You can even display your downloaded Tier Lists!",
-            ),
-            (
-                "📁 Custom MTGA Installs:",
-                "If MTG Arena is installed on a custom drive and dataset downloads fail, click 'File -> Locate MTGA Data Folder...' to link your local files.",
-            ),
-            (
-                "⚙️ Preferences:",
-                "Go to File -> Preferences... to change the UI Scale, switch to A-F letter grades, or enable colorful table rows based on mana cost.",
+                t("dashboard.tip_preferences_title"),
+                t("dashboard.tip_preferences_body"),
             ),
         ]
 
@@ -155,7 +150,7 @@ class DashboardFrame(ttk.Frame):
 
         ttk.Label(
             center_box,
-            text="👋 Welcome to MTGA Draft Tool",
+            text=t("dashboard.welcome"),
             font=Theme.scaled_font(13, "bold"),
             bootstyle="primary",
             justify="center",
@@ -163,7 +158,7 @@ class DashboardFrame(ttk.Frame):
 
         desc1 = ttk.Label(
             center_box,
-            text="No 17Lands dataset is currently loaded. You need to download data before you can draft.",
+            text=t("dashboard.no_dataset_body"),
             font=Theme.scaled_font(9),
             justify="center",
         )
@@ -174,9 +169,9 @@ class DashboardFrame(ttk.Frame):
         step_frame.pack(anchor="center")
 
         steps = [
-            "1. Click the 'Datasets' tab below.",
-            "2. Select the SET and EVENT you want to play.",
-            "3. Click the 'Download Selected Dataset' button.",
+            t("dashboard.step_1"),
+            t("dashboard.step_2"),
+            t("dashboard.step_3"),
         ]
         for s in steps:
             ttk.Label(
@@ -190,14 +185,14 @@ class DashboardFrame(ttk.Frame):
 
         ttk.Label(
             expl_frame,
-            text="Dataset Options:",
+            text=t("dashboard.dataset_options"),
             font=Theme.scaled_font(9, "bold"),
             bootstyle="warning",
         ).pack(anchor="w", pady=(0, Theme.scaled_val(5)))
 
         lbl_ug = ttk.Label(
             expl_frame,
-            text="• USERS: 'All' pulls data from everyone. 'Top' pulls data exclusively from top players.",
+            text=t("dashboard.users_hint"),
             font=Theme.scaled_font(9),
             justify="left",
         )
@@ -206,7 +201,7 @@ class DashboardFrame(ttk.Frame):
 
         lbl_mg = ttk.Label(
             expl_frame,
-            text="• MIN GAMES: The minimum amount of data required to show color-specific win rates.",
+            text=t("dashboard.min_games_hint"),
             font=Theme.scaled_font(9),
             justify="left",
         )
@@ -225,7 +220,7 @@ class DashboardFrame(ttk.Frame):
 
         self.lbl_waiting_title = ttk.Label(
             center_box,
-            text="Waiting for draft to begin...",
+            text=t("dashboard.waiting_draft"),
             font=Theme.scaled_font(13, "bold"),
             bootstyle="primary",
             justify="center",
@@ -234,7 +229,7 @@ class DashboardFrame(ttk.Frame):
 
         self.lbl_waiting_desc = ttk.Label(
             center_box,
-            text="Ensure 'Detailed Logs (Plugin Support)' is checked in your MTGA Account Settings.",
+            text=t("dashboard.enable_detailed_logs"),
             font=Theme.scaled_font(9),
             justify="center",
         )
@@ -293,7 +288,7 @@ class DashboardFrame(ttk.Frame):
         # 1. Pack Table
         self.pack_frame = ttk.Labelframe(
             self.f_left,
-            text=" LIVE PACK: TACTICAL EVALUATION ",
+            text=t("dashboard.frame_live_pack"),
             padding=Theme.scaled_val(5),
         )
         self.pack_frame.grid(
@@ -334,7 +329,7 @@ class DashboardFrame(ttk.Frame):
         # 2. Missing Table (Wheel Tracker)
         self.missing_frame = ttk.Labelframe(
             self.f_left,
-            text=" SEEN CARDS (WHEEL TRACKER) ",
+            text=t("dashboard.frame_seen_cards"),
             padding=Theme.scaled_val(5),
         )
 
@@ -453,7 +448,7 @@ class DashboardFrame(ttk.Frame):
 
         self.signal_container = CollapsibleFrame(
             self.sidebar_container,
-            title="OPEN LANES",
+            title=t("dashboard.panel_open_lanes"),
             configuration=self.configuration,
             setting_key="open_lanes_panel",
         )
@@ -465,7 +460,7 @@ class DashboardFrame(ttk.Frame):
 
         self.curve_container = CollapsibleFrame(
             self.sidebar_container,
-            title="MANA CURVE",
+            title=t("dashboard.panel_mana_curve"),
             configuration=self.configuration,
             setting_key="mana_curve_panel",
         )
@@ -480,7 +475,7 @@ class DashboardFrame(ttk.Frame):
 
         self.pool_container = CollapsibleFrame(
             self.sidebar_container,
-            title="POOL BALANCE",
+            title=t("dashboard.panel_pool_balance"),
             configuration=self.configuration,
             setting_key="pool_balance_panel",
         )
@@ -583,16 +578,16 @@ class DashboardFrame(ttk.Frame):
         else:
             if self._current_event_set:
                 self.lbl_waiting_title.config(
-                    text=f"Draft Started: {self._current_event_set} {self._current_event_type}"
+                    text=t(
+                        "dashboard.draft_started",
+                        set=self._current_event_set,
+                        type=self._current_event_type,
+                    )
                 )
-                self.lbl_waiting_desc.config(
-                    text="Waiting for pack data to appear in the log..."
-                )
+                self.lbl_waiting_desc.config(text=t("dashboard.waiting_pack"))
             else:
-                self.lbl_waiting_title.config(text="Waiting for draft to begin...")
-                self.lbl_waiting_desc.config(
-                    text="Ensure 'Detailed Logs (Plugin Support)' is checked in your MTGA Account Settings."
-                )
+                self.lbl_waiting_title.config(text=t("dashboard.waiting_draft"))
+                self.lbl_waiting_desc.config(text=t("dashboard.enable_detailed_logs"))
 
             self.waiting_frame.grid(row=0, column=0, sticky="nsew")
 
