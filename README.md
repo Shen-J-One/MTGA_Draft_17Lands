@@ -1,5 +1,18 @@
 # MTGA_Draft_17Lands
 
+> **🇨🇳 中文本地化分支** by [@Shen-J-One](https://github.com/Shen-J-One)
+>
+> 这是基于上游 [unrealities/MTGA_Draft_17Lands](https://github.com/unrealities/MTGA_Draft_17Lands) 的中文本地化分支。
+> 默认中文界面;可在 `File → Preferences → LANGUAGE / 语言` 切换回英文。
+>
+> - **Fork 仓库**:[Shen-J-One/MTGA_Draft_17Lands](https://github.com/Shen-J-One/MTGA_Draft_17Lands)
+> - **本地化范围**:全部用户可见 UI(菜单、对话框、仪表盘、套牌构建、Sealed Studio、AI 推荐理由等);MTG 卡牌名 / 17Lands 字段码 / Arena 客户端原文等数据契约保留英文
+> - **MTG 术语**:采用社群通用译法(Draft = 轮抓,Removal = 去除等)
+>
+> 上游英文版的功能介绍、使用步骤、开发文档以下原文不变。
+
+---
+
 Magic: The Gathering Arena draft tool that utilizes 17Lands data.
 
 **This application will automatically support new sets as soon as the sets are released on Arena _and_ the data is available on the [17Lands card ratings](https://www.17lands.com/card_ratings) page.**
