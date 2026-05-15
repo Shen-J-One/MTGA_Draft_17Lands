@@ -12,6 +12,7 @@ import logging
 from datetime import datetime
 
 from src import constants
+from src.i18n import t
 from src.ui.styles import Theme
 from src.utils import retrieve_local_set_list
 from src.configuration import write_configuration
@@ -47,7 +48,7 @@ class TopBarControls(ttk.Frame):
 
         ttk.Button(
             row1,
-            text="Mini Mode",
+            text=t("topbar.mini_mode"),
             bootstyle="info-outline",
             command=self.app._enable_overlay,
             width=-10,
@@ -71,7 +72,7 @@ class TopBarControls(ttk.Frame):
 
         self.btn_reload = ttk.Button(
             row2,
-            text="Reload",
+            text=t("topbar.reload"),
             command=self.app._force_reload,
             width=7,
             bootstyle="secondary-outline",
@@ -137,7 +138,7 @@ class TopBarControls(ttk.Frame):
         if self.app.configuration.settings.deck_filter == constants.FILTER_OPTION_AUTO:
             active_color = colors[0] if colors else "All Decks"
             if active_color == "All Decks":
-                self.lbl_auto_detect.config(text="(Auto: Detecting...)")
+                self.lbl_auto_detect.config(text=t("topbar.auto_detecting"))
             else:
                 color_ratings = (
                     self.app.orchestrator.scanner.set_data.get_color_ratings()
@@ -153,7 +154,13 @@ class TopBarControls(ttk.Frame):
                     == constants.DECK_FILTER_FORMAT_NAMES
                     else active_color
                 )
-                self.lbl_auto_detect.config(text=f"(Auto: {display_name}{wr_str})")
+                self.lbl_auto_detect.config(
+                    text=t(
+                        "topbar.auto_detected",
+                        display_name=display_name,
+                        wr_str=wr_str,
+                    )
+                )
         else:
             self.lbl_auto_detect.config(text="")
 
@@ -168,7 +175,9 @@ class TopBarControls(ttk.Frame):
 
         live_path = self.app.configuration.settings.arena_log_location
         if live_path and os.path.exists(live_path):
-            set_display = getattr(self.app, "detected_set_code", "Arena")
+            set_display = getattr(
+                self.app, "detected_set_code", t("topbar.set_label_arena")
+            )
             if (
                 hasattr(self.app.orchestrator.scanner, "set_list")
                 and self.app.orchestrator.scanner.set_list.data
@@ -178,7 +187,7 @@ class TopBarControls(ttk.Frame):
                         set_display = name
                         break
 
-            live_label = f"🔴 Live: {set_display}"
+            live_label = t("topbar.history_live", set_display=set_display)
             self.history_files[live_label] = live_path
             options.append(live_label)
 
@@ -200,17 +209,25 @@ class TopBarControls(ttk.Frame):
                     card_set = parts[1]
                     event = parts[2]
                 else:
-                    card_set = "UNKNOWN"
-                    event = "Draft"
+                    card_set = t("topbar.set_label_unknown")
+                    event = t("topbar.set_label_draft")
 
                 dt_str = datetime.fromtimestamp(mtime).strftime("%m-%d %H:%M")
-                display_str = f"📂 {card_set} {event} ({dt_str})"
+                display_str = t(
+                    "topbar.history_past",
+                    card_set=card_set,
+                    event=event,
+                    dt_str=dt_str,
+                )
                 self.history_files[display_str] = filepath
                 options.append(display_str)
 
         self.combo_history["values"] = options
         current_selection = self.app.vars["set_label"].get()
-        if "Missing Dataset" in current_selection:
+        # Detect "(Missing Dataset)" / "(缺少数据集)" marker via i18n so
+        # the check stays correct in either language.
+        missing_marker = t("topbar.missing_dataset_suffix", full_set_name="").strip()
+        if missing_marker and missing_marker in current_selection:
             return
 
         current_log = os.path.basename(self.app.orchestrator.scanner.arena_file)
@@ -329,7 +346,9 @@ class TopBarControls(ttk.Frame):
 
             if not available_events:
                 self.dataset_controls_frame.pack(side="right")
-                self.app.vars["set_label"].set(f"{full_set_name} (Missing Dataset)")
+                self.app.vars["set_label"].set(
+                    t("topbar.missing_dataset_suffix", full_set_name=full_set_name)
+                )
                 self.om_event["menu"].delete(0, "end")
                 self.om_group["menu"].delete(0, "end")
                 return
@@ -382,12 +401,14 @@ class TopBarControls(ttk.Frame):
         if selection in self.history_files:
             filepath = self.history_files[selection]
             self.combo_history.configure(state="disabled")
-            self.app.vars["status_text"].set("Queuing Draft...")
+            self.app.vars["status_text"].set(t("topbar.queuing_draft"))
 
             if hasattr(self.app, "loading_overlay"):
                 title_name = selection.replace("📂 ", "").replace("🔴 ", "")
-                self.app.loading_overlay.show(f"Loading: {title_name}")
-                self.app.loading_overlay.update_status("Queuing Draft...")
+                self.app.loading_overlay.show(
+                    t("topbar.loading_label", title_name=title_name)
+                )
+                self.app.loading_overlay.update_status(t("topbar.queuing_draft"))
 
             self.app.root.update_idletasks()
             self.app.orchestrator.set_file_and_scan(filepath)
@@ -435,11 +456,15 @@ class TopBarControls(ttk.Frame):
 
             if os.path.basename(path) != current_loaded:
                 if hasattr(self.app, "loading_overlay"):
-                    self.app.loading_overlay.show(f"Evaluating {evt} ({grp})")
-                    self.app.loading_overlay.update_status("Processing dataset...")
+                    self.app.loading_overlay.show(
+                        t("topbar.evaluating", evt=evt, grp=grp)
+                    )
+                    self.app.loading_overlay.update_status(
+                        t("topbar.processing_dataset")
+                    )
                 self.app.root.update_idletasks()
 
-                self.app.vars["status_text"].set("Loading Dataset...")
+                self.app.vars["status_text"].set(t("topbar.loading_dataset"))
                 try:
                     self.app.orchestrator.scanner.retrieve_set_data(path)
                     self.app.configuration.card_data.latest_dataset = os.path.basename(
@@ -452,7 +477,7 @@ class TopBarControls(ttk.Frame):
                 except Exception as e:
                     logger.error(f"Dataset load error: {e}")
 
-                self.app.vars["status_text"].set("Ready")
+                self.app.vars["status_text"].set(t("topbar.ready"))
                 self.update_data_sources()
                 self.update_deck_filter_options()
                 self.app.orchestrator.request_math_update()
