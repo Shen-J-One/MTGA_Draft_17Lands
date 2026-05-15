@@ -210,7 +210,28 @@ COLUMN_FIELD_LABELS = {
     "value": "VALUE: Advisor Tactical Score",
     "tags": "TAGS: Card Roles",
 }
-LABEL_TO_COLUMN_FIELD = {v: k for k, v in COLUMN_FIELD_LABELS.items()}
+
+
+def column_label(field_key: str, short: bool = False) -> str:
+    """Return the display label for a column field.
+
+    Prefers the localized value from the i18n catalog (key
+    'column.<field>'); falls back to the English default in
+    COLUMN_FIELD_LABELS so the UI keeps working before that catalog
+    section has been wired up. With short=True, splits on ':' to return
+    the compact form used for table headers.
+    """
+    label = COLUMN_FIELD_LABELS.get(field_key, str(field_key).upper())
+    try:
+        from src import i18n  # local import to avoid circular dependency at module load
+        i18n_key = f"column.{field_key}"
+        if i18n.has(i18n_key):
+            label = i18n.t(i18n_key)
+    except Exception:
+        pass
+    if short:
+        return label.split(":", 1)[0].rstrip()
+    return label
 
 DECK_FILTER_DEFAULT = FILTER_OPTION_AUTO
 

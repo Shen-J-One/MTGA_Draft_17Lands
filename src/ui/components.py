@@ -681,7 +681,7 @@ class ModernTreeview(ttk.Treeview):
         return view_id
 
     def _setup_headers(self, columns):
-        from src.constants import COLUMN_FIELD_LABELS
+        from src.constants import column_label
 
         for i in columns:
             if i == "add_btn":
@@ -694,11 +694,7 @@ class ModernTreeview(ttk.Treeview):
                     anchor=tkinter.CENTER,
                 )
                 continue
-            l = (
-                i
-                if "TIER" in i
-                else COLUMN_FIELD_LABELS.get(i, str(i).upper()).split(":")[0]
-            )
+            l = i if "TIER" in i else column_label(i, short=True)
             self.base_labels[i] = l
 
             if i == self.active_sort_column:
@@ -1087,11 +1083,14 @@ class DynamicTreeviewManager(ttk.Frame):
 
         am = tkinter.Menu(menu, tearoff=0)
         menu.add_cascade(label="Add Column", menu=am)
-        from src.constants import COLUMN_FIELD_LABELS
+        from src.constants import COLUMN_FIELD_LABELS, column_label
 
-        for fi, lb in COLUMN_FIELD_LABELS.items():
+        for fi in COLUMN_FIELD_LABELS.keys():
             if fi not in self.active_fields:
-                am.add_command(label=lb, command=lambda x=fi: self._add_column(x))
+                am.add_command(
+                    label=column_label(fi),
+                    command=lambda x=fi: self._add_column(x),
+                )
         from src.tier_list import TierList
 
         latest_dataset = getattr(self.config.card_data, "latest_dataset", "")
@@ -1123,11 +1122,14 @@ class DynamicTreeviewManager(ttk.Frame):
 
     def _show_add_menu(self, event):
         menu = tkinter.Menu(self, tearoff=0)
-        from src.constants import COLUMN_FIELD_LABELS
+        from src.constants import COLUMN_FIELD_LABELS, column_label
 
-        for f, lb in COLUMN_FIELD_LABELS.items():
+        for f in COLUMN_FIELD_LABELS.keys():
             if f not in self.active_fields:
-                menu.add_command(label=lb, command=lambda x=f: self._add_column(x))
+                menu.add_command(
+                    label=column_label(f),
+                    command=lambda x=f: self._add_column(x),
+                )
 
         from src.tier_list import TierList
 
