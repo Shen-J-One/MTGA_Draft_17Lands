@@ -12,6 +12,7 @@ from typing import Callable, Any, Optional
 
 from src.ui.styles import Theme
 from src import constants
+from src.i18n import t
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class SplashWindow:
         self.queue: queue.Queue = queue.Queue()
 
         # UI State
-        self.status_var = tkinter.StringVar(value="INITIALIZING...")
+        self.status_var = tkinter.StringVar(value=t("app.splash_initializing"))
         self.splash: Optional[tkinter.Toplevel] = None
 
         self._build_splash_ui()
@@ -56,7 +57,7 @@ class SplashWindow:
     def _build_splash_ui(self) -> None:
         """Constructs the frameless splash UI."""
         self.splash = tkinter.Toplevel(self.root)
-        self.splash.title("Loading...")
+        self.splash.title(t("app.splash_loading"))
         self.splash.attributes("-topmost", True)
 
         # Handle platform-specific transparency/decoration logic
@@ -71,14 +72,14 @@ class SplashWindow:
 
         ttk.Label(
             container,
-            text="MTGA DRAFT TOOL",
+            text=t("app.title_full"),
             font=Theme.scaled_font(14, "bold"),
             foreground=Theme.ACCENT,
         ).pack(pady=(0, Theme.scaled_val(5)))
 
         ttk.Label(
             container,
-            text=f"Version {constants.APPLICATION_VERSION}",
+            text=t("app.splash_version", version=constants.APPLICATION_VERSION),
             font=Theme.scaled_font(9),
             foreground=Theme.TEXT_MAIN,
         ).pack(pady=(0, Theme.scaled_val(15)))
@@ -135,9 +136,12 @@ class SplashWindow:
     def _handle_critical_error(self, message: str) -> None:
         """Stops animation and alerts user of startup failure."""
         logger.error(message)
-        self.status_var.set("LOAD ERROR")
+        self.status_var.set(t("app.splash_load_error"))
         self.progress.stop()
-        messagebox.showerror("Startup Error", f"Failed to start:\n\n{message}")
+        messagebox.showerror(
+            t("app.startup_error_title"),
+            t("app.startup_error_body", message=message),
+        )
 
     def close(self) -> None:
         """Explicitly closes the splash window."""

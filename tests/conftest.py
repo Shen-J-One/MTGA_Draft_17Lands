@@ -6,8 +6,16 @@ Global pytest configuration and fixtures.
 import pytest
 import tkinter
 from src.ui.styles import Theme
+from src import i18n
 from unittest.mock import patch
 from ttkbootstrap.style import StyleBuilderTTK
+
+
+# Load the English catalog once for the test session so t() calls in the
+# application code return the literal English strings the test suite
+# asserts against. Tests that need to verify Chinese-specific behavior can
+# call i18n.load('zh_CN') in-scope and reload English afterwards.
+i18n.load("en")
 
 
 # Global singleton for Tkinter root
