@@ -20,7 +20,22 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=[
+        # Anaconda installs these globally but the project does not use them;
+        # excluding avoids ~200 MB of bundled binaries and works around
+        # broken installs (e.g. matplotlib compiled against numpy 1.x when
+        # numpy is pinned to 2.x by requirements.txt).
+        "matplotlib",
+        "tensorflow",
+        "torch",
+        "pandas",
+        "IPython",
+        "jupyter",
+        "openvino",
+        "streamlit",
+        "pywavelets",
+        "contourpy",
+    ],
     noarchive=False,
     optimize=0,
 )
