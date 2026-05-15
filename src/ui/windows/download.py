@@ -8,6 +8,7 @@ from typing import Optional
 from dataclasses import dataclass
 
 from src import constants
+from src.i18n import t
 from src.configuration import write_configuration
 from src.file_extractor import FileExtractor
 from src.utils import retrieve_local_set_list
@@ -74,13 +75,13 @@ class DownloadWindow(ttk.Frame):
             configuration=self.configuration,
             on_update_callback=lambda: None,
             static_columns=[
-                "Set",
-                "Event",
-                "Group",
-                "Start",
-                "End",
-                "Collected",
-                "Games",
+                t("dataset.col_set"),
+                t("dataset.col_event"),
+                t("dataset.col_group"),
+                t("dataset.col_start"),
+                t("dataset.col_end"),
+                t("dataset.col_collected"),
+                t("dataset.col_games"),
             ],
             height=4,
         )
@@ -155,7 +156,7 @@ class DownloadWindow(ttk.Frame):
         )
         self.vars["set"] = tkinter.StringVar(value=default_val)
 
-        ttk.Label(form, text="SET:").grid(
+        ttk.Label(form, text=t("dataset.label_set")).grid(
             row=0, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
 
@@ -182,7 +183,7 @@ class DownloadWindow(ttk.Frame):
         # --- END DYNAMIC SET SORTING ---
 
         self.vars["event"] = tkinter.StringVar(value="PremierDraft")
-        ttk.Label(form, text="EVENT:").grid(
+        ttk.Label(form, text=t("dataset.label_event")).grid(
             row=0, column=2, sticky="e", padx=Theme.scaled_val(5)
         )
         self.om_event = ttk.OptionMenu(
@@ -194,7 +195,7 @@ class DownloadWindow(ttk.Frame):
         self.om_event.grid(row=0, column=3, sticky="ew", pady=Theme.scaled_val(2))
 
         self.vars["group"] = tkinter.StringVar(value="All")
-        ttk.Label(form, text="USERS:").grid(
+        ttk.Label(form, text=t("dataset.label_users")).grid(
             row=1, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         ttk.OptionMenu(
@@ -202,7 +203,7 @@ class DownloadWindow(ttk.Frame):
         ).grid(row=1, column=1, sticky="ew", pady=Theme.scaled_val(2))
 
         self.vars["threshold"] = tkinter.StringVar(value="500")
-        ttk.Label(form, text="MIN GAMES:").grid(
+        ttk.Label(form, text=t("dataset.label_min_games")).grid(
             row=1, column=2, sticky="e", padx=Theme.scaled_val(5)
         )
         ttk.Entry(form, textvariable=self.vars["threshold"]).grid(
@@ -210,7 +211,7 @@ class DownloadWindow(ttk.Frame):
         )
 
         self.vars["start"] = tkinter.StringVar(value="2019-01-01")
-        ttk.Label(form, text="START DATE:").grid(
+        ttk.Label(form, text=t("dataset.label_start_date")).grid(
             row=2, column=0, sticky="e", padx=Theme.scaled_val(5)
         )
         ttk.Entry(form, textvariable=self.vars["start"]).grid(
@@ -218,7 +219,7 @@ class DownloadWindow(ttk.Frame):
         )
 
         self.vars["end"] = tkinter.StringVar(value=str(date.today()))
-        ttk.Label(form, text="END DATE:").grid(
+        ttk.Label(form, text=t("dataset.label_end_date")).grid(
             row=2, column=2, sticky="e", padx=Theme.scaled_val(5)
         )
         ttk.Entry(form, textvariable=self.vars["end"]).grid(
@@ -226,7 +227,7 @@ class DownloadWindow(ttk.Frame):
         )
 
         self.btn_dl = ttk.Button(
-            form, text="Download Selected Dataset", command=self._manual_download
+            form, text=t("dataset.btn_download"), command=self._manual_download
         )
         self.btn_dl.grid(
             row=3, column=0, columnspan=4, pady=Theme.scaled_val((10, 0)), sticky="ew"
@@ -235,7 +236,7 @@ class DownloadWindow(ttk.Frame):
         self.progress = ttk.Progressbar(container, mode="determinate")
         self.progress.pack(fill="x", pady=Theme.scaled_val(5))
 
-        self.vars["status"] = tkinter.StringVar(value="Ready")
+        self.vars["status"] = tkinter.StringVar(value=t("dataset.status_ready"))
         ttk.Label(
             container, textvariable=self.vars["status"], bootstyle="secondary"
         ).pack()
@@ -275,10 +276,11 @@ class DownloadWindow(ttk.Frame):
         self.table.selection_set(row_id)
 
         menu = tkinter.Menu(self, tearoff=0)
-        menu.add_command(label="✅ Set as Active Dataset", command=self._on_set_active)
+        menu.add_command(label=t("dataset.ctx_set_active"), command=self._on_set_active)
         menu.add_separator()
         menu.add_command(
-            label="🗑️ Delete Dataset", command=lambda: self._delete_dataset(row_id)
+            label=t("dataset.ctx_delete"),
+            command=lambda: self._delete_dataset(row_id),
         )
 
         menu.post(event.x_root, event.y_root)
@@ -289,14 +291,14 @@ class DownloadWindow(ttk.Frame):
 
         if self.configuration.card_data.latest_dataset == filename:
             messagebox.showwarning(
-                "Cannot Delete",
-                "You cannot delete the currently active dataset. Please double-click a different dataset to switch to it first.",
+                t("dataset.cannot_delete_title"),
+                t("dataset.cannot_delete_body"),
             )
             return
 
         if messagebox.askyesno(
-            "Confirm Delete",
-            f"Are you sure you want to permanently delete this dataset?\n\n{filename}",
+            t("dataset.confirm_delete_title"),
+            t("dataset.confirm_delete_body", filename=filename),
         ):
             try:
                 os.remove(filepath)
@@ -305,7 +307,9 @@ class DownloadWindow(ttk.Frame):
                 invalidate_local_set_cache()
                 self._update_table()
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to delete file:\n{e}")
+                messagebox.showerror(
+                    t("dialog.error_title"), t("dataset.delete_failed_body", e=e)
+                )
 
     def enter(self, args: DatasetArgs = None):
         if args:
@@ -389,10 +393,10 @@ class DownloadWindow(ttk.Frame):
         try:
             thr_str = self.vars["threshold"].get().strip() or "500"
             if not thr_str.isdigit():
-                raise ValueError("Min Games must be numeric.")
+                raise ValueError(t("dataset.error_min_games_numeric"))
             threshold = int(thr_str)
         except ValueError as e:
-            messagebox.showerror("Download Error", str(e))
+            messagebox.showerror(t("dataset.error_title"), str(e))
             return
 
         # CAPTURE DATA ON MAIN THREAD BEFORE ENTERING WORKER
@@ -446,7 +450,7 @@ class DownloadWindow(ttk.Frame):
                 else:
                     self._safe_error(msg)
             else:
-                self._safe_error("17Lands Connection Failed")
+                self._safe_error(t("dataset.error_17lands_connection"))
         except Exception as e:
             self._safe_error(str(e))
 
@@ -482,16 +486,16 @@ class DownloadWindow(ttk.Frame):
         self._update_table()
 
         status_str = (
-            "DOWNLOAD SUCCESSFUL"
+            t("dataset.status_success")
             if "Min Games" not in msg
-            else "DOWNLOADED (LIMITED DATA)"
+            else t("dataset.status_partial")
         )
         self.vars["status"].set(status_str)
 
         # Force UI to fully redraw and settle BEFORE the blocking messagebox appears
         self.update_idletasks()
 
-        messagebox.showinfo("Dataset Download Complete", msg)
+        messagebox.showinfo(t("dataset.complete_title"), msg)
 
         # Defer the main app UI refresh until after the user dismisses the dialog
         if self.on_update_callback:
@@ -500,5 +504,5 @@ class DownloadWindow(ttk.Frame):
     def _handle_error(self, err):
         self.btn_dl.configure(state="normal")
         self.progress["value"] = 0
-        self.vars["status"].set("DOWNLOAD FAILED")
-        messagebox.showerror("Download Error", err)
+        self.vars["status"].set(t("dataset.status_failed"))
+        messagebox.showerror(t("dataset.error_title"), err)
