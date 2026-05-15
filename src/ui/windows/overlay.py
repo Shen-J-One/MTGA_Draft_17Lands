@@ -7,6 +7,7 @@ import tkinter
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from src import constants
+from src.i18n import t
 from src.card_logic import row_color_tag, stack_cards, get_deck_metrics
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -122,7 +123,7 @@ class CompactOverlay(tb.Toplevel):
 
         self.lbl_status = tb.Label(
             header,
-            text="Waiting...",
+            text=t("overlay.waiting"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="inverse-secondary",
         )
@@ -159,10 +160,10 @@ class CompactOverlay(tb.Toplevel):
         self.tab_stats = tb.Frame(self.notebook, padding=Theme.scaled_val(10))
         self.tab_pool = tb.Frame(self.notebook, padding=Theme.scaled_val(2))
 
-        self.notebook.add(self.tab_pack, text=" Pack ")
-        self.notebook.add(self.tab_advisor, text=" Advisor ")
-        self.notebook.add(self.tab_stats, text=" Stats ")
-        self.notebook.add(self.tab_pool, text=" Pool ")
+        self.notebook.add(self.tab_pack, text=t("overlay.tab_pack"))
+        self.notebook.add(self.tab_advisor, text=t("overlay.tab_advisor"))
+        self.notebook.add(self.tab_stats, text=t("overlay.tab_stats"))
+        self.notebook.add(self.tab_pool, text=t("overlay.tab_pool"))
 
         # 1. Pack Tab (Dynamic Grid)
         self.tab_pack.columnconfigure(0, weight=1)
@@ -184,7 +185,7 @@ class CompactOverlay(tb.Toplevel):
         self.missing_frame = tb.Frame(self.tab_pack)
         tb.Label(
             self.missing_frame,
-            text="SEEN CARDS (WHEEL)",
+            text=t("overlay.seen_cards_short"),
             foreground=None,
             bootstyle="primary",
         ).pack(anchor="w", pady=Theme.scaled_val((4, 2)), padx=Theme.scaled_val(2))
@@ -221,7 +222,7 @@ class CompactOverlay(tb.Toplevel):
         # 4. Stats Tab
         tb.Label(
             self.tab_stats,
-            text="OPEN LANES",
+            text=t("overlay.panel_open_lanes"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=(0, Theme.scaled_val(5)))
@@ -230,7 +231,7 @@ class CompactOverlay(tb.Toplevel):
 
         tb.Label(
             self.tab_stats,
-            text="MANA CURVE",
+            text=t("overlay.panel_mana_curve"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=(0, Theme.scaled_val(5)))
@@ -242,7 +243,7 @@ class CompactOverlay(tb.Toplevel):
 
         tb.Label(
             self.tab_stats,
-            text="POOL BALANCE",
+            text=t("overlay.panel_pool_balance"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w", pady=(0, Theme.scaled_val(5)))
@@ -279,7 +280,7 @@ class CompactOverlay(tb.Toplevel):
                 label=label,
                 command=lambda l=label: self.app_context.vars["deck_filter"].set(l),
             )
-        menu.add_cascade(label="Colors (Filter)", menu=filter_menu)
+        menu.add_cascade(label=t("overlay.menu_colors_filter"), menu=filter_menu)
 
         event_menu = tkinter.Menu(menu, tearoff=0)
         for e in self.app_context.current_set_data_map.keys():
@@ -287,7 +288,7 @@ class CompactOverlay(tb.Toplevel):
                 label=e,
                 command=lambda ev=e: self.app_context.vars["selected_event"].set(ev),
             )
-        menu.add_cascade(label="Event Type", menu=event_menu)
+        menu.add_cascade(label=t("overlay.menu_event_type"), menu=event_menu)
 
         group_menu = tkinter.Menu(menu, tearoff=0)
         evt = self.app_context.vars["selected_event"].get()
@@ -299,10 +300,10 @@ class CompactOverlay(tb.Toplevel):
                         g
                     ),
                 )
-        menu.add_cascade(label="User Group", menu=group_menu)
+        menu.add_cascade(label=t("overlay.menu_user_group"), menu=group_menu)
         menu.add_separator()
         menu.add_command(
-            label="Preferences...", command=self.app_context._open_settings
+            label=t("overlay.menu_preferences"), command=self.app_context._open_settings
         )
 
         menu.post(
