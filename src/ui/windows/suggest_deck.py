@@ -19,6 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 from PIL import Image, ImageTk
 
 from src import constants
+from src.i18n import t
 from src.card_logic import copy_deck, get_strict_colors, is_castable, get_functional_cmc
 from src.ui.styles import Theme
 from src.ui.components import DynamicTreeviewManager, CardToolTip, AutoScrollbar
@@ -78,7 +79,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         self.lbl_archetype = ttk.Label(
             self.arch_frame,
-            text="AI SUGGESTION:",
+            text=t("suggest.ai_suggestion"),
             font=Theme.scaled_font(8, "bold"),
             bootstyle="primary",
         )
@@ -98,14 +99,17 @@ class SuggestDeckPanel(ttk.Frame):
         )
 
         self.btn_copy = ttk.Button(
-            self.arch_frame, text="Copy Deck", width=12, command=self._copy_to_clipboard
+            self.arch_frame,
+            text=t("suggest.btn_copy_deck"),
+            width=12,
+            command=self._copy_to_clipboard,
         )
         self.btn_copy.pack(side="right", padx=Theme.scaled_val(5))
 
         if self.on_export_custom:
             self.btn_export_builder = ttk.Button(
                 self.arch_frame,
-                text="Custom Builder",
+                text=t("suggest.btn_custom_builder"),
                 bootstyle="info-outline",
                 command=lambda: self.on_export_custom(
                     self.current_deck_list, self.current_sb_list
@@ -131,7 +135,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         # Main Deck Tab
         self.deck_frame = ttk.Frame(self.notebook, padding=Theme.scaled_val(2))
-        self.notebook.add(self.deck_frame, text=" MAIN DECK (0) ")
+        self.notebook.add(self.deck_frame, text=t("suggest.tab_main_deck"))
 
         cols = ["name", "count", "cmc", "types", "colors", "gihwr"]
         self.table_manager = DynamicTreeviewManager(
@@ -145,7 +149,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         # Sideboard Tab
         self.sb_frame = ttk.Frame(self.notebook, padding=Theme.scaled_val(2))
-        self.notebook.add(self.sb_frame, text=" SIDEBOARD ")
+        self.notebook.add(self.sb_frame, text=t("suggest.tab_sideboard"))
 
         self.sb_manager = DynamicTreeviewManager(
             self.sb_frame,
@@ -158,7 +162,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         # Stats Tab
         self.stats_tab = ttk.Frame(self.notebook)
-        self.notebook.add(self.stats_tab, text=" STATS & ANALYSIS ")
+        self.notebook.add(self.stats_tab, text=t("suggest.tab_stats"))
 
         self.stats_tab.rowconfigure(0, weight=1)
         self.stats_tab.columnconfigure(0, weight=1)
@@ -197,7 +201,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         # --- SIMULATION & SAMPLE HAND TAB ---
         self.hand_tab = ttk.Frame(self.notebook, padding=Theme.scaled_val(15))
-        self.notebook.add(self.hand_tab, text=" SIMULATION & SAMPLE HAND ")
+        self.notebook.add(self.hand_tab, text=t("suggest.tab_simulation"))
 
         # Two Columns: 0 = Hand Canvas, 1 = Monte Carlo
         self.hand_tab.columnconfigure(0, weight=3)
@@ -211,7 +215,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         self.btn_draw = ttk.Button(
             hand_control_bar,
-            text="Draw New Hand",
+            text=t("suggest.btn_draw_hand"),
             command=self._draw_sample_hand,
             bootstyle="success-outline",
             width=16,
@@ -260,7 +264,7 @@ class SuggestDeckPanel(ttk.Frame):
         # Right Column: Scrollable Monte Carlo Simulation
         self.sim_outer_frame = ttk.Labelframe(
             self.hand_tab,
-            text=" MONTE CARLO SIMULATION (10,000 Games) ",
+            text=t("suggest.sim_label"),
             padding=Theme.scaled_val(5),
         )
         self.sim_outer_frame.grid(row=1, column=1, sticky="nsew")
@@ -309,7 +313,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         self.sim_label = ttk.Label(
             self.sim_frame,
-            text="Generate a deck to analyze.",
+            text=t("suggest.hint_no_deck"),
             font=Theme.scaled_font(11),
         )
         self.sim_label.is_dynamic_wrap = True
@@ -349,7 +353,7 @@ class SuggestDeckPanel(ttk.Frame):
         deck_frame = getattr(self, "deck_frame", None)
         if notebook and deck_frame:
             try:
-                notebook.tab(deck_frame, text=" MAIN DECK (0) ")
+                notebook.tab(deck_frame, text=t("suggest.tab_main_deck"))
             except Exception:
                 pass
 
@@ -416,7 +420,7 @@ class SuggestDeckPanel(ttk.Frame):
         if not stats:
             ttk.Label(
                 sim_frame,
-                text="Deck must have 40 cards to analyze.",
+                text=t("suggest.hint_need_40"),
                 bootstyle="warning",
             ).pack(pady=Theme.scaled_val(20))
             return
@@ -432,18 +436,18 @@ class SuggestDeckPanel(ttk.Frame):
 
             if not reverse:
                 if value >= good_val:
-                    icon, color = "🟢 Great", "success"
+                    icon, color = t("suggest.rating_great"), "success"
                 elif value >= fair_val:
-                    icon, color = "🟡 Fair", "warning"
+                    icon, color = t("suggest.rating_fair"), "warning"
                 else:
-                    icon, color = "🔴 Poor", "danger"
+                    icon, color = t("suggest.rating_poor"), "danger"
             else:
                 if value <= good_val:
-                    icon, color = "🟢 Great", "success"
+                    icon, color = t("suggest.rating_great"), "success"
                 elif value <= fair_val:
-                    icon, color = "🟡 Fair", "warning"
+                    icon, color = t("suggest.rating_fair"), "warning"
                 else:
-                    icon, color = "🔴 Poor", "danger"
+                    icon, color = t("suggest.rating_poor"), "danger"
 
             val_str = f"{value:.1f}%" if is_percent else f"{value:.2f}"
 
@@ -468,41 +472,46 @@ class SuggestDeckPanel(ttk.Frame):
 
         ttk.Label(
             sim_frame,
-            text="CONSISTENCY METRICS",
+            text=t("suggest.section_consistency"),
             bootstyle="primary",
             font=Theme.scaled_font(10, "bold"),
         ).pack(anchor="w", pady=Theme.scaled_val((0, 5)))
 
-        _add_stat("T2 Play (2-Drop):", stats["cast_t2"], (65, 50))
-        _add_stat("T3 Play (3-Drop):", stats["cast_t3"], (65, 50))
-        _add_stat("T4 Play (4-Drop):", stats["cast_t4"], (55, 40))
-        _add_stat("Perfect Curve (T2-T4):", stats["curve_out"], (25, 15))
-        _add_stat("Removal by Turn 4:", stats["removal_t4"], (60, 45))
+        _add_stat(t("suggest.stat_t2"), stats["cast_t2"], (65, 50))
+        _add_stat(t("suggest.stat_t3"), stats["cast_t3"], (65, 50))
+        _add_stat(t("suggest.stat_t4"), stats["cast_t4"], (55, 40))
+        _add_stat(t("suggest.stat_curve"), stats["curve_out"], (25, 15))
+        _add_stat(t("suggest.stat_removal_t4"), stats["removal_t4"], (60, 45))
 
         ttk.Separator(sim_frame).pack(fill="x", pady=Theme.scaled_val(8))
 
         ttk.Label(
             sim_frame,
-            text="RISK FACTORS",
+            text=t("suggest.section_risk"),
             bootstyle="primary",
             font=Theme.scaled_font(10, "bold"),
         ).pack(anchor="w", pady=Theme.scaled_val((0, 5)))
 
-        _add_stat("Mulligan Rate:", stats["mulligans"], (15, 25), reverse=True)
+        _add_stat(t("suggest.stat_mulligan"), stats["mulligans"], (15, 25), reverse=True)
         _add_stat(
-            "Avg. Hand Size:", stats["avg_hand_size"], (6.8, 6.5), is_percent=False
+            t("suggest.stat_hand_size"),
+            stats["avg_hand_size"],
+            (6.8, 6.5),
+            is_percent=False,
         )
-        _add_stat("Missed 3rd Land Drop:", stats["screw_t3"], (15, 25), reverse=True)
-        _add_stat("Missed 4th Land Drop:", stats["screw_t4"], (25, 35), reverse=True)
-        _add_stat("Color Screwed (T3):", stats["color_screw_t3"], (6, 12), reverse=True)
-        _add_stat("Mana Flooded (T5):", stats["flood_t5"], (20, 30), reverse=True)
+        _add_stat(t("suggest.stat_screw_t3"), stats["screw_t3"], (15, 25), reverse=True)
+        _add_stat(t("suggest.stat_screw_t4"), stats["screw_t4"], (25, 35), reverse=True)
+        _add_stat(
+            t("suggest.stat_color_screw"), stats["color_screw_t3"], (6, 12), reverse=True
+        )
+        _add_stat(t("suggest.stat_flood"), stats["flood_t5"], (20, 30), reverse=True)
 
         ttk.Separator(sim_frame).pack(fill="x", pady=Theme.scaled_val(8))
 
         # --- ADVISOR SUMMARY LOGIC ---
         ttk.Label(
             sim_frame,
-            text="ADVISOR SUMMARY",
+            text=t("suggest.section_advisor"),
             bootstyle="info",
             font=Theme.scaled_font(10, "bold"),
         ).pack(anchor="w", pady=Theme.scaled_val((0, 5)))
@@ -519,7 +528,7 @@ class SuggestDeckPanel(ttk.Frame):
 
         advice = []
         if stats["cast_t2"] < 50:
-            advice.append("• Add more 2-drops to improve early board presence.")
+            advice.append(t("custom.advice_more_2drops"))
 
         from src import constants
 
@@ -535,27 +544,24 @@ class SuggestDeckPanel(ttk.Frame):
         if stats["color_screw_t3"] > 10.0:
             if colorless_lands:
                 advice.append(
-                    f"• Color screw risk is elevated. Consider cutting a colorless utility land (like {colorless_lands[0].get('name', '')}) for a basic land."
+                    t(
+                        "custom.advice_color_screw_with_land",
+                        name=colorless_lands[0].get("name", ""),
+                    )
                 )
             else:
-                advice.append(
-                    "• High color screw risk. Consider cutting a splash card or adding more fixing."
-                )
+                advice.append(t("custom.advice_color_screw_no_land"))
 
         # Ensure static advice does not contradict the AI Optimizer's recent actions
         is_18_lands = optimization_note and "18 Lands" in optimization_note
         is_16_lands = optimization_note and "16 Lands" in optimization_note
 
         if stats["screw_t3"] > 22.0 and not is_16_lands:
-            advice.append(
-                "• Frequently missing land drops. Consider running an extra land."
-            )
+            advice.append(t("custom.advice_missed_land"))
         if stats["flood_t5"] > 28.0 and not is_18_lands:
-            advice.append(
-                "• High flood risk. Consider cutting a land or adding mana sinks."
-            )
+            advice.append(t("custom.advice_flood"))
         if stats["removal_t4"] < 45:
-            advice.append("• Low early interaction. Prioritize cheap removal.")
+            advice.append(t("custom.advice_low_interaction"))
 
         deck_colors = set()
         for c in self.current_deck_list:
@@ -564,9 +570,7 @@ class SuggestDeckPanel(ttk.Frame):
                     deck_colors.add(col)
 
         if len(deck_colors) >= 3:
-            advice.append(
-                "⚠️ Mana Base: You are playing 3+ colors. This inherently increases your risk of color screw. Ensure you have at least 3-4 strong fixing sources."
-            )
+            advice.append(t("custom.advice_3_color_warning"))
 
         # Swap Suggestions
         if not optimization_note:
@@ -614,7 +618,11 @@ class SuggestDeckPanel(ttk.Frame):
                             ),
                         )
                         advice.append(
-                            f"• Swap: Cut [{worst_expensive['name']}] for [{best_cheap['name']}] to lower curve."
+                            t(
+                                "custom.advice_swap",
+                                a=worst_expensive["name"],
+                                b=best_cheap["name"],
+                            )
                         )
 
         for tip in advice:
@@ -653,7 +661,7 @@ class SuggestDeckPanel(ttk.Frame):
         if not self.current_deck_list:
             ttk.Label(
                 hand_container,
-                text="Generate a deck first.",
+                text=t("suggest.hint_no_deck_short"),
                 font=Theme.scaled_font(11),
             ).pack(pady=Theme.scaled_val(20))
             return
@@ -665,7 +673,7 @@ class SuggestDeckPanel(ttk.Frame):
         if len(flat_deck) < 7:
             ttk.Label(
                 hand_container,
-                text="Deck has fewer than 7 cards.",
+                text=t("suggest.hint_lt_7"),
                 font=Theme.scaled_font(11),
             ).pack(pady=Theme.scaled_val(20))
             return
@@ -841,7 +849,7 @@ class SuggestDeckPanel(ttk.Frame):
 
                             ttk.Label(
                                 container_frame,
-                                text="Image\nUnavailable",
+                                text=t("suggest.image_unavailable"),
                                 bootstyle="danger",
                                 justify="center",
                                 font=Theme.scaled_font(9),
@@ -1149,8 +1157,8 @@ class SuggestDeckPanel(ttk.Frame):
                 for symbol in "WUBRG":
                     pips[symbol] += cost.count(symbol) * count
 
-                for t in c.get("tags", []):
-                    tags[t] = tags.get(t, 0) + count
+                for tag in c.get("tags", []):
+                    tags[tag] = tags.get(tag, 0) + count
 
         avg_cmc = cmc_sum / non_lands if non_lands else 0
 
@@ -1158,7 +1166,7 @@ class SuggestDeckPanel(ttk.Frame):
         comp_frame.pack(fill="x", pady=Theme.scaled_val(5))
         ttk.Label(
             comp_frame,
-            text="DECK COMPOSITION",
+            text=t("suggest.section_composition"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
@@ -1175,7 +1183,7 @@ class SuggestDeckPanel(ttk.Frame):
         color_frame.pack(fill="x", pady=Theme.scaled_val(5))
         ttk.Label(
             color_frame,
-            text="COLOR REQUIREMENTS (PIPS)",
+            text=t("suggest.section_pips"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
@@ -1202,7 +1210,7 @@ class SuggestDeckPanel(ttk.Frame):
         tags_frame.pack(fill="x", pady=Theme.scaled_val(5))
         ttk.Label(
             tags_frame,
-            text="ROLES & SYNERGIES",
+            text=t("suggest.section_roles_synergies"),
             font=Theme.scaled_font(10, "bold"),
             bootstyle="primary",
         ).pack(anchor="w")
@@ -1220,7 +1228,7 @@ class SuggestDeckPanel(ttk.Frame):
                     anchor="w", pady=Theme.scaled_val(2)
                 )
         else:
-            ttk.Label(tags_frame, text="No Scryfall tags found for this set.").pack(
+            ttk.Label(tags_frame, text=t("suggest.no_tags_set")).pack(
                 anchor="w", pady=Theme.scaled_val(2)
             )
 
@@ -1288,8 +1296,8 @@ class SuggestDeckPanel(ttk.Frame):
 
         notebook = getattr(self, "notebook", None)
         if notebook and notebook.winfo_exists():
-            current_tab = notebook.tab(notebook.select(), "text")
-            if "SIMULATION & SAMPLE HAND" in current_tab:
+            # Identify the Simulation tab by widget identity (language-agnostic).
+            if notebook.select() == str(self.hand_tab):
                 self.after(100, self._draw_sample_hand)
 
     def _copy_to_clipboard(self):
@@ -1302,10 +1310,12 @@ class SuggestDeckPanel(ttk.Frame):
             self.clipboard_clear()
             self.clipboard_append(export_text)
 
-            self.btn_copy.config(text="Copied! ✔", bootstyle="success")
+            self.btn_copy.config(text=t("taken.btn_copied"), bootstyle="success")
             self.after(
                 2000,
-                lambda: self.btn_copy.config(text="Copy Deck", bootstyle="primary"),
+                lambda: self.btn_copy.config(
+                    text=t("suggest.btn_copy_deck"), bootstyle="primary"
+                ),
             )
 
     def _on_selection(self, event, is_sb=False):
