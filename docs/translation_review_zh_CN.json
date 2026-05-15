@@ -814,6 +814,22 @@
     "advice_swap": {
       "en": "• Swap: Cut [{a}] for [{b}] to lower curve.",
       "zh": "• 建议替换:撤掉【{a}】换成【{b}】以降低费用曲线。"
+    },
+    "btn_auto_optimize": {
+      "en": "🤖 Auto-Optimize Deck",
+      "zh": "🤖 自动优化套牌"
+    },
+    "optimization_failed_title": {
+      "en": "Optimization Failed",
+      "zh": "优化失败"
+    },
+    "hint_no_deck_sim": {
+      "en": "Generate a deck to run simulations.",
+      "zh": "生成一副套牌以运行模拟。"
+    },
+    "sim_loading_msg": {
+      "en": "Running 10,000 Monte Carlo Simulations...",
+      "zh": "正在运行 10,000 局蒙特卡洛模拟..."
     }
   },
 
@@ -884,6 +900,36 @@
     "import_failed_body": {
       "en": "Failed to import deck: {e}",
       "zh": "导入套牌失败:{e}"
+    },
+
+    "import_failed_title": { "en": "Import Failed", "zh": "导入失败" },
+    "import_no_valid_cards": {
+      "en": "No valid MTGA format cards found in clipboard.",
+      "zh": "剪贴板中未找到有效的 MTGA 格式卡牌。"
+    },
+    "partial_import_title": { "en": "Partial Import", "zh": "部分导入" },
+    "partial_import_body_prefix": {
+      "en": "Deck imported, but the following cards were skipped because they are not in your pool (or you exceeded your owned quantity limits):\n\n",
+      "zh": "套牌已导入,但以下卡牌被跳过(它们不在你的卡池中,或超出了你的拥有数量上限):\n\n"
+    },
+    "partial_import_more_suffix": {
+      "en": " ...and {n} more.",
+      "zh": " ...还有 {n} 张。"
+    },
+    "import_success_title": { "en": "Success", "zh": "成功" },
+    "import_success_body": {
+      "en": "Deck imported successfully!",
+      "zh": "套牌导入成功!"
+    },
+    "export_success_title": { "en": "Export Successful", "zh": "导出成功" },
+    "export_success_body": {
+      "en": "Deck copied to clipboard in MTGA format!",
+      "zh": "套牌已以 MTGA 格式复制到剪贴板!"
+    },
+    "api_error_title": { "en": "API Error", "zh": "API 错误" },
+    "api_error_body": {
+      "en": "Could not reach Sealeddeck.tech automatically.\n\nYour deck has been copied to the clipboard. You can paste it manually at sealeddeck.tech.",
+      "zh": "无法自动连接 Sealeddeck.tech。\n\n你的套牌已复制到剪贴板,可前往 sealeddeck.tech 手动粘贴。"
     }
   },
 
