@@ -1276,7 +1276,7 @@
   },
 
   "advisor_reason": {
-    "_note": "Advisor (src/advisor/engine.py) outputs reasoning strings via Recommendation.reasoning. The exhaustive list requires a deeper scan; below are the most common phrases. Reviewer can verify these; full list will be appended in a later pass.",
+    "_note": "Advisor (src/advisor/engine.py) reasoning phrases shown in the Advisor Recommendations panel and card tooltips. Exact strings as emitted by the engine (placeholders match engine code).",
 
     "elite_pick": {
       "en": "ELITE PICK (+{z}σ)",
@@ -1284,10 +1284,25 @@
     },
     "tactically_superior": {
       "en": "Tactically superior for your pool",
-      "zh": "战术上优于你当前的卡池",
-      "status": "pending_review",
-      "note": "Uses term.card_pool"
+      "zh": "战术上优于你当前的卡池"
     },
+    "true_bomb": {
+      "en": "TRUE BOMB (High IWD)",
+      "zh": "真炸弹(高 IWD)"
+    },
+    "late_signal": {
+      "en": "LATE SIGNAL",
+      "zh": "晚期信号"
+    },
+    "only_option": {
+      "en": "This is the only available option.",
+      "zh": "这是唯一可选项。"
+    },
+    "basic_land_skip": {
+      "en": "Basic Land (Skip)",
+      "zh": "基本地(跳过)"
+    },
+
     "needs_2drops": {
       "en": "Critical: Needs 2-Drops",
       "zh": "关键:需要 2 费牌"
@@ -1295,49 +1310,136 @@
     "needs_removal": {
       "en": "Critical: Needs Removal",
       "zh": "关键:需要去除",
-      "status": "confirmed",
-      "note": "Uses term.removal"
+      "status": "confirmed"
     },
     "needs_fixing": {
       "en": "Critical: Needs Fixing",
-      "zh": "关键:需要调色",
-      "status": "pending_review",
-      "note": "Fixing = mana fixing = 调色 / 调整法术力来源. Verify wording."
+      "zh": "关键:需要调色"
+    },
+    "needs_creatures": {
+      "en": "Critical: Needs Creatures",
+      "zh": "关键:需要生物"
+    },
+
+    "archetype_synergy": {
+      "en": "Archetype Synergy (+{bonus:.1f})",
+      "zh": "原型协同 (+{bonus:.1f})"
+    },
+    "archetype_glue": {
+      "en": "Archetype Glue (+{bonus:.1f})",
+      "zh": "原型黏合牌 (+{bonus:.1f})"
+    },
+    "artifact_synergy": {
+      "en": "Artifact Synergy",
+      "zh": "神器协同"
+    },
+    "graveyard_synergy": {
+      "en": "Graveyard Synergy",
+      "zh": "坟场协同"
+    },
+    "counters_synergy": {
+      "en": "Counters Synergy",
+      "zh": "指示物协同"
+    },
+
+    "curve_too_heavy": {
+      "en": "Curve Too Heavy",
+      "zh": "曲线过重"
+    },
+    "curve_foundation": {
+      "en": "Curve Foundation",
+      "zh": "曲线基础"
     },
     "top_heavy_penalty": {
       "en": "Top-Heavy Penalty",
       "zh": "高费惩罚",
-      "status": "pending_review",
-      "note": "Top-heavy = curve too high in CMC. Alternative: 头重脚轻惩罚."
+      "note": "Reference label not currently emitted by engine; kept for tooltip use."
     },
-    "archetype_synergy": {
-      "en": "Archetype Synergy",
-      "zh": "原型协同",
-      "status": "pending_review",
-      "note": "Uses term.archetype"
+
+    "premium_fixing": {
+      "en": "Premium Fixing",
+      "zh": "高级调色"
     },
-    "wheels_pct": {
-      "en": "Wheels {pct}%",
-      "zh": "{pct}% 回流",
-      "status": "pending_review",
-      "note": "Uses term.wheel"
+    "removal_saturated": {
+      "en": "Removal Saturated",
+      "zh": "去除已饱和"
     },
-    "uncastable_double_pip": {
-      "en": "Uncastable (Double Pip)",
-      "zh": "无法施放(双色费)",
-      "status": "pending_review",
-      "note": "Uses term.pip"
+    "enables_bomb_splash": {
+      "en": "Enables Bomb Splash",
+      "zh": "支持外色炸弹"
+    },
+
+    "high_vor": {
+      "en": "High VOR: Scarce {color} {role} (+{bonus:.0f})",
+      "zh": "高 VOR:稀缺 {color}色{role} (+{bonus:.0f})"
+    },
+    "highly_replaceable": {
+      "en": "Highly Replaceable {role}",
+      "zh": "易替代的{role}"
+    },
+    "improves_best_deck": {
+      "en": "Improves Best Deck (+{bonus:.1f})",
+      "zh": "改善最佳套牌 (+{bonus:.1f})"
+    },
+
+    "off_color": {
+      "en": "Off-Color",
+      "zh": "外色"
+    },
+    "off_color_gold": {
+      "en": "Off-Color Gold",
+      "zh": "外色金卡"
     },
     "off_color_penalty": {
       "en": "Off-Color Penalty",
       "zh": "外色惩罚",
-      "status": "pending_review"
+      "note": "Reference label; engine emits 'off_color' / 'off_color_gold' instead."
+    },
+    "splashable": {
+      "en": "Splashable",
+      "zh": "可外色加入"
     },
     "splash_speculative": {
       "en": "Splash/Speculative",
-      "zh": "外色投机",
-      "status": "pending_review",
-      "note": "Uses term.splash"
+      "zh": "外色投机"
+    },
+    "bomb_splash": {
+      "en": "Bomb Splash",
+      "zh": "外色炸弹"
+    },
+    "premium_removal_splash": {
+      "en": "Premium Removal Splash",
+      "zh": "外色高级去除"
+    },
+    "greedy_bomb_splash": {
+      "en": "Greedy Bomb Splash",
+      "zh": "贪心外色炸弹"
+    },
+
+    "uncastable_double_pip": {
+      "en": "Uncastable (Double Pip)",
+      "zh": "无法施放(双色费)"
+    },
+    "wheels_pct": {
+      "en": "Wheels ~{pct:.0f}%",
+      "zh": "约 {pct:.0f}% 回流"
+    },
+
+    "role_removal": {
+      "en": "Removal",
+      "zh": "去除",
+      "status": "confirmed",
+      "note": "Used as {role} placeholder in high_vor / highly_replaceable."
+    },
+    "role_evasion": {
+      "en": "Evasion",
+      "zh": "闪避",
+      "note": "Used as {role} placeholder."
+    },
+    "role_2drops": {
+      "en": "2-Drops",
+      "zh": "2 费牌",
+      "note": "Used as {role} placeholder."
     }
   },
 

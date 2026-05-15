@@ -12,6 +12,7 @@ import re
 from typing import List, Dict, Any, Tuple
 from src.advisor.schema import Recommendation
 from src import constants
+from src.i18n import t
 from src.card_logic import count_fixing, get_functional_cmc
 
 logger = logging.getLogger(__name__)
@@ -144,7 +145,7 @@ class DraftAdvisor:
                     lateness = safe_pick - alsa
                     if lateness >= 2.0 and z_score > 0.5:
                         power_bonus += lateness * z_score * 3.0
-                        reasons.append(f"LATE SIGNAL")
+                        reasons.append(t("advisor_reason.late_signal"))
 
                 # --- STEP 4: Archetype Synergy & 'Glue Cards' ---
                 is_on_lane = (
@@ -167,10 +168,14 @@ class DraftAdvisor:
                         rarity = str(card.get("rarity", "common")).lower()
                         if delta >= 1.0 and rarity in ["common", "uncommon"]:
                             synergy_bonus = delta * 5.0
-                            reasons.append(f"Archetype Glue (+{synergy_bonus:.1f})")
+                            reasons.append(
+                                t("advisor_reason.archetype_glue", bonus=synergy_bonus)
+                            )
                         elif delta >= 1.5:
                             synergy_bonus = delta * 3.0
-                            reasons.append(f"Archetype Synergy (+{synergy_bonus:.1f})")
+                            reasons.append(
+                                t("advisor_reason.archetype_synergy", bonus=synergy_bonus)
+                            )
 
                     if is_on_lane:
                         base_score *= 1.3 if needs_playables else 1.1
@@ -185,11 +190,11 @@ class DraftAdvisor:
 
                         roles_to_check = []
                         if "Creature" in card.get("types", []) and cmc <= 2:
-                            roles_to_check.append(("2-drop", "2-Drops"))
+                            roles_to_check.append(("2-drop", t("advisor_reason.role_2drops")))
                         if "removal" in tags:
-                            roles_to_check.append(("removal", "Removal"))
+                            roles_to_check.append(("removal", t("advisor_reason.role_removal")))
                         if "evasion" in tags:
-                            roles_to_check.append(("evasion", "Evasion"))
+                            roles_to_check.append(("evasion", t("advisor_reason.role_evasion")))
 
                         for role_key, role_name in roles_to_check:
                             count = texture.get(role_key, 99)
@@ -197,11 +202,21 @@ class DraftAdvisor:
                                 vor_bonus = 6.0
                                 power_bonus += vor_bonus
                                 reasons.append(
-                                    f"High VOR: Scarce {c} {role_name} (+{vor_bonus:.0f})"
+                                    t(
+                                        "advisor_reason.high_vor",
+                                        color=c,
+                                        role=role_name,
+                                        bonus=vor_bonus,
+                                    )
                                 )
                             elif count >= 7:
                                 power_bonus -= 2.0
-                                reasons.append(f"Highly Replaceable {role_name}")
+                                reasons.append(
+                                    t(
+                                        "advisor_reason.highly_replaceable",
+                                        role=role_name,
+                                    )
+                                )
 
                 # --- STEP 6: Castability (Pip-Sensitive Discipline & Premium Splashing) ---
                 cast_mult, cast_reason = self._calculate_castability_v5(
@@ -229,7 +244,10 @@ class DraftAdvisor:
                         if improvement > 0.1:
                             deck_improvement_bonus = improvement * 3.0
                             reasons.append(
-                                f"Improves Best Deck (+{deck_improvement_bonus:.1f})"
+                                t(
+                                    "advisor_reason.improves_best_deck",
+                                    bonus=deck_improvement_bonus,
+                                )
                             )
                     except Exception as e:
                         logger.warning(f"Advisor deck improvement scoring error: {e}")
@@ -255,12 +273,12 @@ class DraftAdvisor:
                 if is_basic_land:
                     final_score = 0.0
                     if len(pack_cards) == 1:
-                        reasons = ["This is the only available option."]
+                        reasons = [t("advisor_reason.only_option")]
                     else:
-                        reasons = ["Basic Land (Skip)"]
+                        reasons = [t("advisor_reason.basic_land_skip")]
 
                 if iwd_mult > 1.0 and final_score > 0:
-                    reasons.insert(0, "TRUE BOMB (High IWD)")
+                    reasons.insert(0, t("advisor_reason.true_bomb"))
 
                 recommendations.append(
                     Recommendation(
@@ -278,7 +296,9 @@ class DraftAdvisor:
                             else False
                         ),
                         archetype_fit=(
-                            self.main_archetype if is_on_lane else "Splash/Speculative"
+                            self.main_archetype
+                            if is_on_lane
+                            else t("advisor_reason.splash_speculative")
                         ),
                         tags=card.get("tags", []),
                     )
@@ -413,7 +433,7 @@ class DraftAdvisor:
 
         # 1. Curve and Heavy Drops Check
         if cmc >= 5 and self.pool_metrics["heavy_drops"] >= 4 and "Land" not in types:
-            return 0.7, "Curve Too Heavy"
+            return 0.7, t("advisor_reason.curve_too_heavy")
 
         # 2. Creature Quota Check
         if pack >= 2 and "Creature" in types:
@@ -421,15 +441,15 @@ class DraftAdvisor:
                 self.TOTAL_PICKS / max(1, len(self.pool))
             )
             if projected_creatures < 13:
-                return 1.25, "Critical: Needs Creatures"
+                return 1.25, t("advisor_reason.needs_creatures")
 
         # 3. Synergy (A+B) Checks
         if "synergy_artifacts" in tags and self.pool_metrics["artifacts"] >= 4:
-            return 1.2, "Artifact Synergy"
+            return 1.2, t("advisor_reason.artifact_synergy")
         if "synergy_graveyard" in tags and self.pool_metrics["graveyard_enablers"] >= 3:
-            return 1.2, "Graveyard Synergy"
+            return 1.2, t("advisor_reason.graveyard_synergy")
         if "synergy_counters" in tags and self.pool_metrics["counters_enablers"] >= 3:
-            return 1.2, "Counters Synergy"
+            return 1.2, t("advisor_reason.counters_synergy")
 
         # 4. Fixing Hunger
         if "Land" in types or "fixing_ramp" in tags:
@@ -441,15 +461,15 @@ class DraftAdvisor:
                 and off_color_playables > 0
                 and fixing_count <= off_color_playables
             ):
-                return 1.4, "Critical: Needs Fixing"
+                return 1.4, t("advisor_reason.needs_fixing")
 
             if any(
                 c in self.pool_metrics["splash_targets"] for c in card.get("colors", [])
             ):
-                return 1.3, "Enables Bomb Splash"
+                return 1.3, t("advisor_reason.enables_bomb_splash")
 
             return (
-                (1.15, "Premium Fixing")
+                (1.15, t("advisor_reason.premium_fixing"))
                 if pack == 1 and len(card.get("colors", [])) > 1
                 else (1.0, "")
             )
@@ -460,9 +480,9 @@ class DraftAdvisor:
                 pack >= 2
                 and self.pool_metrics["hard_removal_count"] < self.TARGET_HARD_REMOVAL
             ):
-                return 1.3, "Critical: Needs Removal"
+                return 1.3, t("advisor_reason.needs_removal")
             elif self.pool_metrics["hard_removal_count"] > 6:
-                return 0.8, "Removal Saturated"
+                return 0.8, t("advisor_reason.removal_saturated")
 
         # 6. Early Interaction
         if cmc <= 2 and ("Creature" in types or "removal" in tags):
@@ -473,10 +493,10 @@ class DraftAdvisor:
                 return (
                     (
                         1.0 + min(0.5, (self.TARGET_EARLY_PLAYS - projected) * 0.15),
-                        "Critical: Needs 2-Drops",
+                        t("advisor_reason.needs_2drops"),
                     )
                     if pack >= 2
-                    else (1.1, "Curve Foundation")
+                    else (1.1, t("advisor_reason.curve_foundation"))
                 )
         return 1.0, ""
 
@@ -511,9 +531,9 @@ class DraftAdvisor:
                 return 1.0, ""
             pressure = 1.0 - (max(0, ((pack - 1) * 15 + (pick - 1)) - 7) * 0.05)
             return (
-                (max(0.2, pressure - 0.2), "Off-Color Gold")
+                (max(0.2, pressure - 0.2), t("advisor_reason.off_color_gold"))
                 if len(card_colors) > 1 and off_color_pips > 0
-                else (max(0.4, pressure), "Off-Color")
+                else (max(0.4, pressure), t("advisor_reason.off_color"))
             )
 
         if not is_on_lane:
@@ -522,7 +542,7 @@ class DraftAdvisor:
                 and off_color_pips >= 2
                 and self.pool_metrics["fixing_count"] < 2
             ):
-                return 0.01, "Uncastable (Double Pip)"
+                return 0.01, t("advisor_reason.uncastable_double_pip")
 
             splash_colors = [c for c in card_colors if c not in top_2_lane]
             has_specific_fixing = (
@@ -540,9 +560,9 @@ class DraftAdvisor:
                         4 if pack == 3 else 3
                     ):
                         reason = (
-                            "Bomb Splash"
+                            t("advisor_reason.bomb_splash")
                             if z_score >= self.BOMB_Z_SCORE
-                            else "Premium Removal Splash"
+                            else t("advisor_reason.premium_removal_splash")
                         )
                         return (0.35 if pack == 3 else 0.45), reason
                 elif (
@@ -551,12 +571,12 @@ class DraftAdvisor:
                     and z_score >= self.BOMB_Z_SCORE
                 ):
                     if self.pool_metrics["fixing_count"] >= 4:
-                        return 0.30, "Greedy Bomb Splash"
+                        return 0.30, t("advisor_reason.greedy_bomb_splash")
 
             if off_color_pips == 1 and has_specific_fixing:
-                return 0.3, "Splashable"
+                return 0.3, t("advisor_reason.splashable")
 
-            return 0.01 if pack == 3 else 0.05, "Off-Color"
+            return 0.01 if pack == 3 else 0.05, t("advisor_reason.off_color")
         return 1.0, ""
 
     def _check_relative_wheel(
@@ -578,7 +598,7 @@ class DraftAdvisor:
                 context_prob *= 0.40
             final_prob = max(0.0, min(100.0, context_prob))
             return (
-                (0.8, f"Wheels ~{final_prob:.0f}%", final_prob)
+                (0.8, t("advisor_reason.wheels_pct", pct=final_prob), final_prob)
                 if final_prob >= 75.0 and rank_in_pack >= 4
                 else (1.0, "", final_prob)
             )
