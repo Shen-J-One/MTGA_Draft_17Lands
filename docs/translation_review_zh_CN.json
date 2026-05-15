@@ -1,0 +1,1304 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "generated_date": "2026-05-15",
+    "source_project": "MTGA_Draft_17Lands (fork: Shen-J-One)",
+    "schema_format": "review-bilingual-v1",
+    "schema_description": {
+      "leaf_entry": "Each leaf has { en: string, zh: string, status?: enum, note?: string }",
+      "status_values": {
+        "(omitted)": "Translation is straightforward; review optional",
+        "confirmed": "Translation explicitly confirmed by user — do NOT change without asking",
+        "pending_review": "Translation uncertain (typically MTG-specific jargon); reviewer should verify or propose alternative",
+        "do_not_translate": "Protected string (API field / log keyword / internal key) — listed here for reference; the en value is kept as-is in code"
+      },
+      "placeholders": "Strings may contain {name}, {pack}, {count} etc. These MUST appear identically in both en and zh fields; otherwise the .format() call will fail at runtime."
+    },
+    "reviewer_instructions": [
+      "1. Open this file in any editor with JSON syntax highlighting.",
+      "2. For each entry, compare 'en' (English original) with 'zh' (Chinese translation).",
+      "3. If you accept the translation, leave it unchanged.",
+      "4. If you want to change it, edit ONLY the 'zh' field. Do NOT change 'en' or the key path.",
+      "5. Pay extra attention to entries with status='pending_review' — these are MTG-specific terms the original translator was uncertain about.",
+      "6. If you change a term in section 'term' (e.g., term.sealed), please also update every occurrence of that term across the file for consistency.",
+      "7. NEVER touch entries with status='do_not_translate'.",
+      "8. When changing the zh value, ensure all {placeholder} tokens from 'en' still appear identically in 'zh'.",
+      "9. Once done, send the file back. We will generate the production en.json / zh_CN.json automatically."
+    ],
+    "statistics": {
+      "total_entries": "~410",
+      "confirmed_terms": ["term.draft", "term.removal"],
+      "pending_review_count": "~30 MTG terms + their derivatives"
+    },
+    "categories": {
+      "term": "Canonical MTG terminology dictionary — terms referenced across the app",
+      "app": "Application metadata: splash, startup, version",
+      "menu": "Top OS menu bar (File / Tools / Theme)",
+      "topbar": "Top control bar (Mini Mode, Reload, status)",
+      "tab": "Main application notebook tabs",
+      "settings": "Preferences / Settings window",
+      "dataset": "Dataset manager window",
+      "tier": "Tier List import / management panel",
+      "dashboard": "Main draft dashboard (waiting / active / no-data states)",
+      "recap": "Post-draft recap screen",
+      "taken": "Card Pool tab (taken cards)",
+      "suggest": "AI deck suggestion panel",
+      "custom": "Custom deck builder",
+      "sealed": "Sealed Studio (sealed deckbuilding workspace)",
+      "compare": "Card comparison panel",
+      "overlay": "Mini Mode overlay window",
+      "practice": "Practice / random pool dialog",
+      "dialog": "Shared messagebox / confirmation dialogs",
+      "column": "Table column field labels (CRITICAL — see note)",
+      "color": "MTG color names (W/U/B/R/G/NC)",
+      "card_type": "MTG card type names",
+      "guild": "2/3-color clan names (Azorius, Dimir, ...)",
+      "group": "User group labels (All/Top/Middle/Bottom)",
+      "event": "Limited event types (Premier Draft, etc.)",
+      "tag": "Scryfall semantic card-role tags (TAG_VISUALS)",
+      "grade": "Pool-quality grade labels",
+      "advisor_reason": "AI advisor reasoning phrases (engine output; may be expanded)",
+      "_do_not_translate": "Reference list of strings that must remain English (NOT entries to translate)"
+    },
+    "critical_notes": {
+      "column_field_labels": "The 'column.*' entries appear in code as BOTH dictionary keys AND display values via LABEL_TO_COLUMN_FIELD (constants.py:213). Translating them WILL BREAK the reverse-lookup logic. Before applying these translations, the code must first be refactored to separate the internal key from the display label. The reviewer should still verify the proposed Chinese label, but applying it requires the refactor.",
+      "mtga_in_game_strings": "Strings like 'Detailed Logs (Plugin Support)' refer to actual menu items inside MTG Arena's client. Translating them in our UI would make instructions impossible to follow because the user must locate the literal English option in Arena. These are kept in English on purpose."
+    }
+  },
+
+  "term": {
+    "draft": {
+      "en": "Draft",
+      "zh": "轮抓",
+      "status": "confirmed",
+      "note": "User-confirmed. Used as substring in 'Draft Log', 'Export Draft', 'Draft Recap', etc."
+    },
+    "removal": {
+      "en": "Removal",
+      "zh": "去除",
+      "status": "confirmed",
+      "note": "User-confirmed. Used in tag labels, advisor reasoning, and tooltips."
+    },
+    "sealed": {
+      "en": "Sealed",
+      "zh": "现开",
+      "status": "pending_review",
+      "note": "MTG limited format where players build from 6 packs. Community usually says 现开. Used in 'Sealed Studio', 'Generate Random Sealed Pool', etc."
+    },
+    "sealed_studio": {
+      "en": "Sealed Studio",
+      "zh": "现开工作室",
+      "status": "pending_review",
+      "note": "Derived from term.sealed. Alternatives: 现开实验室 / 现开模拟器."
+    },
+    "wheel": {
+      "en": "Wheel",
+      "zh": "回流",
+      "status": "pending_review",
+      "note": "When a card you saw earlier comes back to you. Often used as verb 'to wheel'. Used in 'Wheel Tracker', 'Wheels 80%', 'Probability of Wheeling'."
+    },
+    "wheel_tracker": {
+      "en": "Wheel Tracker",
+      "zh": "回流追踪",
+      "status": "pending_review",
+      "note": "Derived from term.wheel."
+    },
+    "pack": {
+      "en": "Pack",
+      "zh": "补充包",
+      "status": "pending_review",
+      "note": "MTG official 补充包. A pack of 14-15 cards opened during draft."
+    },
+    "card_pool": {
+      "en": "Card Pool",
+      "zh": "卡池",
+      "status": "pending_review",
+      "note": "Common community term. Used in pool grading, sealed pool, taken pool."
+    },
+    "mulligan": {
+      "en": "Mulligan",
+      "zh": "调度",
+      "status": "pending_review",
+      "note": "MTG official 调度. Some communities say 换手."
+    },
+    "pip": {
+      "en": "Pip",
+      "zh": "色法术力点",
+      "status": "pending_review",
+      "note": "Refers to a single colored mana symbol like {W}. 'Double pip' = 双色费 / 双色法术力点. Used in 'COLOR REQUIREMENTS (PIPS)', 'Double Pip' reasoning."
+    },
+    "bomb": {
+      "en": "Bomb",
+      "zh": "炸弹牌",
+      "status": "pending_review",
+      "note": "An exceptionally strong card. Community standard term."
+    },
+    "splash": {
+      "en": "Splash",
+      "zh": "外色加入",
+      "status": "pending_review",
+      "note": "Including off-color cards (e.g., 'splash a red removal in BW deck'). Alternative: 客串."
+    },
+    "curve": {
+      "en": "Mana Curve",
+      "zh": "法术力曲线",
+      "status": "pending_review",
+      "note": "Distribution of mana costs in deck. Community standard."
+    },
+    "lane": {
+      "en": "Lane",
+      "zh": "路线",
+      "status": "pending_review",
+      "note": "An open color combination. Used in 'Open Lanes', 'Lane Pressure', 'Lane Commitment'. Alternatives: 色道 / 路线."
+    },
+    "open_lanes": {
+      "en": "Open Lanes",
+      "zh": "开放路线",
+      "status": "pending_review",
+      "note": "Derived from term.lane. Sidebar panel and overlay tab title."
+    },
+    "archetype": {
+      "en": "Archetype",
+      "zh": "原型",
+      "status": "pending_review",
+      "note": "A draft strategy template. Used in 'Archetype Gravity', 'Top Archetypes', 'Archetype Play Share'. Alternatives: 套路 (colloquial)."
+    },
+    "tier_list": {
+      "en": "Tier List",
+      "zh": "评分表",
+      "status": "pending_review",
+      "note": "Imported 17Lands tier list. Alternative: 强度榜."
+    },
+    "treasure": {
+      "en": "Treasure",
+      "zh": "宝藏",
+      "status": "pending_review",
+      "note": "MTG official 宝藏. Token that taps for mana of any color."
+    },
+    "z_score": {
+      "en": "Z-Score",
+      "zh": "Z 分数",
+      "status": "pending_review",
+      "note": "Statistical term. Often kept as 'Z-Score' in technical contexts."
+    },
+    "vor": {
+      "en": "VOR",
+      "zh": "VOR",
+      "status": "pending_review",
+      "note": "Value Over Replacement. Acronym recommended to keep; long form may be 替代价值."
+    },
+    "pick": {
+      "en": "Pick",
+      "zh": "选",
+      "status": "pending_review",
+      "note": "Verb/noun for the draft pick action. Used in 'Pack 1 Pick 2' → 第一包第二选."
+    },
+    "taken_cards": {
+      "en": "Taken Cards",
+      "zh": "已抓卡牌",
+      "status": "pending_review",
+      "note": "Internal term for the cumulative pool of picked cards. Distinct from term.picked_cards."
+    },
+    "picked_cards": {
+      "en": "Picked Cards",
+      "zh": "已选记录",
+      "status": "pending_review",
+      "note": "Internal term for the ordered pick history. May be displayed less often than Taken Cards."
+    },
+    "premier_draft": {
+      "en": "Premier Draft",
+      "zh": "顶级轮抓",
+      "status": "pending_review",
+      "note": "MTGA's main human draft event. MTGA official may say 精英限制赛 but 顶级轮抓 is more colloquial."
+    },
+    "traditional_draft": {
+      "en": "Traditional Draft",
+      "zh": "传统轮抓",
+      "status": "pending_review"
+    },
+    "quick_draft": {
+      "en": "Quick Draft",
+      "zh": "快速轮抓",
+      "status": "pending_review",
+      "note": "Bot draft event."
+    },
+    "bot_draft": {
+      "en": "Bot Draft",
+      "zh": "机器人轮抓",
+      "status": "pending_review"
+    },
+    "pick_two_draft": {
+      "en": "Pick Two Draft",
+      "zh": "双选轮抓",
+      "status": "pending_review",
+      "note": "Special draft format where players pick 2 cards per pack."
+    },
+    "detailed_logs_arena": {
+      "en": "Detailed Logs (Plugin Support)",
+      "zh": "Detailed Logs (Plugin Support)",
+      "status": "do_not_translate",
+      "note": "This is the exact label of the checkbox INSIDE the MTG Arena game client. Translating it would prevent users from finding the option in Arena. Keep as-is."
+    }
+  },
+
+  "app": {
+    "title": {
+      "en": "MTGA Draft Tool",
+      "zh": "MTGA 轮抓工具"
+    },
+    "title_full": {
+      "en": "MTGA DRAFT TOOL",
+      "zh": "MTGA 轮抓工具"
+    },
+    "splash_loading": {
+      "en": "Loading...",
+      "zh": "加载中..."
+    },
+    "splash_initializing": {
+      "en": "INITIALIZING...",
+      "zh": "初始化中..."
+    },
+    "splash_version": {
+      "en": "Version {version}",
+      "zh": "版本 {version}",
+      "note": "{version} is a literal like 4.15"
+    },
+    "splash_load_error": {
+      "en": "LOAD ERROR",
+      "zh": "加载错误"
+    },
+    "startup_error_title": {
+      "en": "Startup Error",
+      "zh": "启动错误"
+    },
+    "startup_error_body": {
+      "en": "Failed to start:\n\n{message}",
+      "zh": "启动失败:\n\n{message}"
+    }
+  },
+
+  "menu": {
+    "file": { "en": "File", "zh": "文件" },
+    "file_preferences": { "en": "Preferences...", "zh": "首选项..." },
+    "file_read_draft_log": { "en": "Read Draft Log...", "zh": "读取轮抓日志..." },
+    "file_read_player_log": { "en": "Read Player.log...", "zh": "读取 Player.log..." },
+    "file_locate_mtga": { "en": "Locate MTGA Data Folder...", "zh": "定位 MTGA 数据文件夹..." },
+    "file_export_csv": { "en": "Export Draft (CSV)", "zh": "导出轮抓记录 (CSV)" },
+    "file_export_json": { "en": "Export Draft (JSON)", "zh": "导出轮抓记录 (JSON)" },
+    "file_exit": { "en": "Exit", "zh": "退出" },
+
+    "tools": { "en": "Tools", "zh": "工具" },
+    "tools_practice_generate": {
+      "en": "Practice: Generate Random Sealed Pool",
+      "zh": "练习:生成随机现开卡池",
+      "status": "pending_review",
+      "note": "Uses term.sealed"
+    },
+    "tools_practice_import": {
+      "en": "Practice: Import Sealed Pool from Clipboard",
+      "zh": "练习:从剪贴板导入现开卡池",
+      "status": "pending_review",
+      "note": "Uses term.sealed"
+    },
+
+    "theme": { "en": "Theme", "zh": "主题" },
+    "theme_system": { "en": "System (Native)", "zh": "系统(原生)" },
+    "theme_mana_flair": {
+      "en": "Mana Flair: {name}",
+      "zh": "法术力风格:{name}",
+      "note": "{name} is one of Forest/Island/Swamp/Mountain/Plains/Wastes"
+    },
+    "theme_custom": { "en": "Custom Themes (.tcl)", "zh": "自定义主题 (.tcl)" },
+    "theme_browse_tcl": { "en": "Browse for .tcl...", "zh": "浏览 .tcl 文件..." },
+
+    "filter_tcl_files": { "en": "Tcl files", "zh": "Tcl 文件" },
+    "filter_log_files": { "en": "Log", "zh": "日志" },
+    "filter_all_files": { "en": "All", "zh": "全部" },
+
+    "overlay_loading_draft": { "en": "Loading Draft Log", "zh": "加载轮抓日志" },
+    "overlay_loading_player": { "en": "Loading Player.log", "zh": "加载 Player.log" },
+    "overlay_queuing_file": { "en": "Queuing file...", "zh": "排队加载文件..." },
+
+    "locate_select_folder_title": { "en": "Select MTGA_Data Folder", "zh": "选择 MTGA_Data 文件夹" },
+    "locate_success_body": {
+      "en": "MTGA Data Folder successfully set to:\n{folder}\n\nYou can now download datasets!",
+      "zh": "MTGA 数据文件夹已成功设置为:\n{folder}\n\n你现在可以下载数据集了!"
+    },
+    "locate_error_body": {
+      "en": "Could not find 'Downloads/Raw' in the selected folder.\n\nPlease select the valid MTGA_Data folder.",
+      "zh": "在所选文件夹中找不到 'Downloads/Raw'。\n\n请选择有效的 MTGA_Data 文件夹。"
+    }
+  },
+
+  "topbar": {
+    "mini_mode": { "en": "Mini Mode", "zh": "迷你模式" },
+    "reload": { "en": "Reload", "zh": "重新加载" },
+    "auto_detecting": { "en": "(Auto: Detecting...)", "zh": "(自动:检测中...)" },
+    "auto_detected": {
+      "en": "(Auto: {display_name}{wr_str})",
+      "zh": "(自动:{display_name}{wr_str})"
+    },
+    "queuing_draft": { "en": "Queuing Draft...", "zh": "排队加载轮抓...", "status": "pending_review", "note": "Uses term.draft" },
+    "loading_label": { "en": "Loading: {title_name}", "zh": "加载中:{title_name}" },
+    "loading_dataset": { "en": "Loading Dataset...", "zh": "加载数据集中..." },
+    "evaluating": { "en": "Evaluating {evt} ({grp})", "zh": "评估 {evt}({grp})" },
+    "processing_dataset": { "en": "Processing dataset...", "zh": "处理数据集中..." },
+    "ready": { "en": "Ready", "zh": "就绪" },
+    "history_live": {
+      "en": "🔴 Live: {set_display}",
+      "zh": "🔴 实时:{set_display}"
+    },
+    "history_past": {
+      "en": "📂 {card_set} {event} ({dt_str})",
+      "zh": "📂 {card_set} {event}({dt_str})"
+    },
+    "missing_dataset_suffix": {
+      "en": "{full_set_name} (Missing Dataset)",
+      "zh": "{full_set_name}(缺少数据集)"
+    },
+    "set_label_arena": { "en": "Arena", "zh": "竞技场" },
+    "set_label_unknown": { "en": "UNKNOWN", "zh": "未知" },
+    "set_label_draft": { "en": "Draft", "zh": "轮抓", "status": "confirmed" }
+  },
+
+  "tab": {
+    "datasets": { "en": " Datasets ", "zh": " 数据集 ", "note": "Leading/trailing space is part of tab styling, preserve it" },
+    "card_pool": {
+      "en": " Card Pool ",
+      "zh": " 卡池 ",
+      "status": "pending_review",
+      "note": "Uses term.card_pool"
+    },
+    "deck_builder": { "en": " Deck Builder ", "zh": " 套牌构建 " },
+    "custom_deck": { "en": " Custom Deck ", "zh": " 自定义套牌 " },
+    "comparisons": { "en": " Comparisons ", "zh": " 卡牌对比 " },
+    "tier_lists": {
+      "en": " Tier Lists ",
+      "zh": " 评分表 ",
+      "status": "pending_review",
+      "note": "Uses term.tier_list"
+    }
+  },
+
+  "settings": {
+    "title": { "en": "Preferences", "zh": "首选项" },
+    "section_data": { "en": "DATA EVALUATION", "zh": "数据评估" },
+    "win_rate_format": { "en": "Win Rate Format:", "zh": "胜率显示格式:" },
+    "deck_filter_format": { "en": "Deck Filter Format:", "zh": "套牌过滤格式:" },
+    "ui_scale": { "en": "UI Scale:", "zh": "界面缩放:" },
+    "section_intelligence": { "en": "INTELLIGENCE & HUD", "zh": "智能与显示" },
+    "always_on_top": { "en": "Always On Top", "zh": "窗口置顶" },
+    "auto_sync_datasets": { "en": "Auto-Sync Cloud Datasets", "zh": "自动同步云端数据集" },
+    "highlight_row_mana": { "en": "Highlight Row by Mana Cost", "zh": "按法术力费用高亮行" },
+    "check_dataset_updates": { "en": "Check for Dataset Updates", "zh": "检查数据集更新" },
+    "alert_missing_datasets": { "en": "Alert on Missing Datasets", "zh": "缺失数据集时提醒" },
+    "enable_draft_log": {
+      "en": "Enable Draft Log Creation",
+      "zh": "启用轮抓日志记录",
+      "status": "confirmed",
+      "note": "Uses term.draft"
+    },
+    "section_paths": { "en": "SYSTEM PATHS", "zh": "系统路径" },
+    "player_log_location": { "en": "Player.log Location:", "zh": "Player.log 位置:" },
+    "mtga_data_location": { "en": "MTGA_Data Location:", "zh": "MTGA_Data 位置:" },
+    "restore_defaults": { "en": "Restore Defaults", "zh": "恢复默认" },
+    "done": { "en": "Done", "zh": "完成" },
+    "confirm_reset_title": { "en": "Confirm Reset", "zh": "确认重置" },
+    "confirm_reset_body": { "en": "Restore all settings to default?", "zh": "将所有设置恢复为默认值?" },
+
+    "win_rate_format_percentage": {
+      "en": "Percentage",
+      "zh": "百分比",
+      "status": "pending_review",
+      "note": "CRITICAL: This value is also used as an internal enum key. Translating it requires refactoring constants.RESULT_FORMAT_LIST to decouple keys from labels."
+    },
+    "win_rate_format_rating": {
+      "en": "Rating",
+      "zh": "评分",
+      "status": "pending_review",
+      "note": "Same key-vs-label refactor caveat as Percentage."
+    },
+    "win_rate_format_grade": {
+      "en": "Grade",
+      "zh": "等级",
+      "status": "pending_review",
+      "note": "Same key-vs-label refactor caveat."
+    },
+    "deck_filter_format_names": {
+      "en": "Names",
+      "zh": "名称",
+      "status": "pending_review",
+      "note": "Same key-vs-label refactor caveat."
+    },
+    "deck_filter_format_colors": {
+      "en": "Colors",
+      "zh": "颜色",
+      "status": "pending_review",
+      "note": "Same key-vs-label refactor caveat."
+    },
+    "deck_filter_format_set_names": {
+      "en": "Set Names",
+      "zh": "系列名称",
+      "status": "pending_review",
+      "note": "Same key-vs-label refactor caveat."
+    }
+  },
+
+  "dataset": {
+    "col_set": { "en": "Set", "zh": "系列" },
+    "col_event": { "en": "Event", "zh": "赛事" },
+    "col_group": { "en": "Group", "zh": "玩家组" },
+    "col_start": { "en": "Start", "zh": "开始" },
+    "col_end": { "en": "End", "zh": "结束" },
+    "col_collected": { "en": "Collected", "zh": "收集时间" },
+    "col_games": { "en": "Games", "zh": "对局数" },
+
+    "label_set": { "en": "SET:", "zh": "系列:" },
+    "label_event": { "en": "EVENT:", "zh": "赛事:" },
+    "label_users": { "en": "USERS:", "zh": "玩家:" },
+    "label_min_games": { "en": "MIN GAMES:", "zh": "最小对局数:" },
+    "label_start_date": { "en": "START DATE:", "zh": "起始日期:" },
+    "label_end_date": { "en": "END DATE:", "zh": "结束日期:" },
+
+    "btn_download": { "en": "Download Selected Dataset", "zh": "下载所选数据集" },
+    "status_ready": { "en": "Ready", "zh": "就绪" },
+    "status_success": { "en": "DOWNLOAD SUCCESSFUL", "zh": "下载成功" },
+    "status_partial": { "en": "DOWNLOADED (LIMITED DATA)", "zh": "已下载(数据有限)" },
+    "status_failed": { "en": "DOWNLOAD FAILED", "zh": "下载失败" },
+
+    "complete_title": { "en": "Dataset Download Complete", "zh": "数据集下载完成" },
+    "error_title": { "en": "Download Error", "zh": "下载错误" },
+    "error_min_games_numeric": { "en": "Min Games must be numeric.", "zh": "最小对局数必须为数字。" },
+    "error_17lands_connection": { "en": "17Lands Connection Failed", "zh": "17Lands 连接失败" },
+
+    "ctx_set_active": { "en": "✅ Set as Active Dataset", "zh": "✅ 设为当前数据集" },
+    "ctx_delete": { "en": "🗑️ Delete Dataset", "zh": "🗑️ 删除数据集" },
+    "cannot_delete_title": { "en": "Cannot Delete", "zh": "无法删除" },
+    "cannot_delete_body": {
+      "en": "You cannot delete the currently active dataset. Please double-click a different dataset to switch to it first.",
+      "zh": "无法删除当前正在使用的数据集。请先双击其他数据集进行切换。"
+    },
+    "confirm_delete_title": { "en": "Confirm Delete", "zh": "确认删除" },
+    "confirm_delete_body": {
+      "en": "Are you sure you want to permanently delete this dataset?\n\n{filename}",
+      "zh": "确定要永久删除该数据集吗?\n\n{filename}"
+    },
+    "delete_failed_body": {
+      "en": "Failed to delete file:\n{e}",
+      "zh": "删除文件失败:\n{e}"
+    }
+  },
+
+  "tier": {
+    "section_imported": { "en": "IMPORTED TIER LISTS", "zh": "已导入的评分表", "status": "pending_review", "note": "Uses term.tier_list" },
+    "btn_delete_selected": { "en": "Delete Selected", "zh": "删除所选" },
+    "filter_label": { "en": "Filter:", "zh": "过滤:" },
+    "filter_all_sets": { "en": "All Sets", "zh": "全部系列" },
+    "col_label": { "en": "Label", "zh": "标签" },
+    "col_date": { "en": "Date", "zh": "日期" },
+    "section_import": { "en": "IMPORT NEW TIER LIST", "zh": "导入新评分表", "status": "pending_review" },
+    "label_url": { "en": "17LANDS URL:", "zh": "17LANDS 网址:" },
+    "label_custom": { "en": "CUSTOM LABEL (e.g. 'Pro Review'):", "zh": "自定义标签(如「职业评测」):" },
+    "btn_import": { "en": "Download & Index Tier List", "zh": "下载并索引评分表", "status": "pending_review" },
+    "status_connecting": { "en": "CONNECTING...", "zh": "连接中..." },
+    "status_success": { "en": "IMPORT SUCCESSFUL", "zh": "导入成功" },
+    "status_failed": { "en": "IMPORT FAILED", "zh": "导入失败" },
+    "invalid_url_title": { "en": "Invalid URL", "zh": "无效网址" },
+    "invalid_url_body": { "en": "Use 17Lands URL.", "zh": "请使用 17Lands 网址。" },
+    "missing_label_title": { "en": "Missing Label", "zh": "缺少标签" },
+    "missing_label_body": { "en": "Provide a label.", "zh": "请提供一个标签。" },
+    "import_error_title": { "en": "Import Error", "zh": "导入错误" },
+    "api_error": { "en": "API Error", "zh": "API 错误" },
+    "confirm_delete_title": { "en": "Confirm Delete", "zh": "确认删除" },
+    "confirm_delete_body": {
+      "en": "Are you sure you want to delete the selected tier list(s)?",
+      "zh": "确定要删除所选评分表吗?",
+      "status": "pending_review"
+    }
+  },
+
+  "dashboard": {
+    "welcome": { "en": "👋 Welcome to MTGA Draft Tool", "zh": "👋 欢迎使用 MTGA 轮抓工具" },
+    "no_dataset_body": {
+      "en": "No 17Lands dataset is currently loaded. You need to download data before you can draft.",
+      "zh": "当前未加载 17Lands 数据集。开始轮抓前需要下载数据。",
+      "status": "confirmed",
+      "note": "Uses term.draft (as verb)"
+    },
+    "step_1": { "en": "1. Click the 'Datasets' tab below.", "zh": "1. 点击下方的「数据集」标签页。" },
+    "step_2": { "en": "2. Select the SET and EVENT you want to play.", "zh": "2. 选择你想游玩的系列与赛事。" },
+    "step_3": { "en": "3. Click the 'Download Selected Dataset' button.", "zh": "3. 点击「下载所选数据集」按钮。" },
+    "dataset_options": { "en": "Dataset Options:", "zh": "数据集选项:" },
+    "users_hint": {
+      "en": "• USERS: 'All' pulls data from everyone. 'Top' pulls data exclusively from top players.",
+      "zh": "• 玩家:「全部」从所有玩家拉取数据;「顶尖」仅从顶尖玩家拉取数据。"
+    },
+    "min_games_hint": {
+      "en": "• MIN GAMES: The minimum amount of data required to show color-specific win rates.",
+      "zh": "• 最小对局数:显示颜色相关胜率所需的最小数据量。"
+    },
+    "waiting_draft": {
+      "en": "Waiting for draft to begin...",
+      "zh": "等待轮抓开始...",
+      "status": "confirmed"
+    },
+    "waiting_pack": {
+      "en": "Waiting for pack data to appear in the log...",
+      "zh": "等待补充包数据出现在日志中...",
+      "status": "pending_review",
+      "note": "Uses term.pack"
+    },
+    "enable_detailed_logs": {
+      "en": "Ensure 'Detailed Logs (Plugin Support)' is checked in your MTGA Account Settings.",
+      "zh": "请确认你已在 MTGA 账号设置中勾选「Detailed Logs (Plugin Support)」。",
+      "note": "Keeps the literal English string the user must find inside Arena. See term.detailed_logs_arena."
+    },
+    "draft_started": {
+      "en": "Draft Started: {set} {type}",
+      "zh": "轮抓已开始:{set} {type}",
+      "status": "confirmed"
+    },
+    "tips_header": { "en": "✨ Personalize Your Experience", "zh": "✨ 个性化你的体验" },
+    "tip_theme_title": { "en": "🎨 Themes & Mana Flairs:", "zh": "🎨 主题与法术力风格:" },
+    "tip_theme_body": {
+      "en": "Use the 'Theme' menu at the very top of the window to select Magic-inspired color palettes.",
+      "zh": "通过窗口顶部的「主题」菜单选择魔法风调色板。"
+    },
+    "tip_columns_title": { "en": "📊 Custom Columns:", "zh": "📊 自定义列:" },
+    "tip_columns_body": {
+      "en": "Right-click any table header (like 'GIH WR' or 'NAME') to re-arrange, add, or remove stats. You can even display your downloaded Tier Lists!",
+      "zh": "右键点击任意表头(如「GIH WR」或「NAME」)可以重新排列、添加或移除统计列,甚至显示你下载的评分表!",
+      "status": "pending_review",
+      "note": "Uses term.tier_list"
+    },
+    "tip_custom_install_title": { "en": "📁 Custom MTGA Installs:", "zh": "📁 自定义 MTGA 安装目录:" },
+    "tip_custom_install_body": {
+      "en": "If MTG Arena is installed on a custom drive and dataset downloads fail, click 'File -> Locate MTGA Data Folder...' to link your local files.",
+      "zh": "如果 MTG 竞技场安装在非默认路径导致下载失败,点击「文件 → 定位 MTGA 数据文件夹...」链接本地文件。"
+    },
+    "tip_preferences_title": { "en": "⚙️ Preferences:", "zh": "⚙️ 首选项:" },
+    "tip_preferences_body": {
+      "en": "Go to File -> Preferences... to change the UI Scale, switch to A-F letter grades, or enable colorful table rows based on mana cost.",
+      "zh": "通过「文件 → 首选项...」可以更改界面缩放、切换 A–F 字母评分,或按法术力费用启用彩色行。"
+    },
+
+    "frame_live_pack": {
+      "en": " LIVE PACK: TACTICAL EVALUATION ",
+      "zh": " 实时补充包:战术评估 ",
+      "status": "pending_review",
+      "note": "Uses term.pack. Leading/trailing space part of frame styling."
+    },
+    "frame_seen_cards": {
+      "en": " SEEN CARDS (WHEEL TRACKER) ",
+      "zh": " 已见卡牌(回流追踪) ",
+      "status": "pending_review",
+      "note": "Uses term.wheel"
+    },
+    "panel_open_lanes": {
+      "en": "OPEN LANES",
+      "zh": "开放路线",
+      "status": "pending_review",
+      "note": "Uses term.open_lanes"
+    },
+    "panel_mana_curve": {
+      "en": "MANA CURVE",
+      "zh": "法术力曲线",
+      "status": "pending_review",
+      "note": "Uses term.curve"
+    },
+    "panel_pool_balance": {
+      "en": "POOL BALANCE",
+      "zh": "卡池平衡",
+      "status": "pending_review",
+      "note": "Uses term.card_pool"
+    },
+    "advisor_recommendations": { "en": "ADVISOR RECOMMENDATIONS", "zh": "AI 推荐" },
+    "advisor_calculating": { "en": "Calculating tactical scores...", "zh": "计算战术评分中..." },
+    "tooltip_global_perf": { "en": "GLOBAL PERFORMANCE", "zh": "全局表现" },
+    "tooltip_archetype_share": {
+      "en": "ARCHETYPE PLAY SHARE",
+      "zh": "原型使用率",
+      "status": "pending_review",
+      "note": "Uses term.archetype"
+    },
+    "tooltip_card_roles": { "en": "CARD ROLES", "zh": "卡牌角色" },
+
+    "overlay_initializing": { "en": "Initializing...", "zh": "初始化中..." },
+    "overlay_loading_draft": {
+      "en": "Loading Draft",
+      "zh": "加载轮抓",
+      "status": "confirmed"
+    }
+  },
+
+  "recap": {
+    "draft_completed": {
+      "en": "Draft Completed",
+      "zh": "轮抓完成",
+      "status": "confirmed"
+    },
+    "view_on_17lands": { "en": "View Draft on 17Lands 🌐", "zh": "在 17Lands 查看轮抓 🌐", "status": "confirmed" },
+    "enter_sealed_studio": {
+      "en": "⚔️ Enter Sealed Studio",
+      "zh": "⚔️ 进入现开工作室",
+      "status": "pending_review",
+      "note": "Uses term.sealed_studio"
+    },
+
+    "tab_recap": { "en": " 🏆 Draft Recap ", "zh": " 🏆 轮抓回顾 ", "status": "confirmed" },
+    "tab_synergy": { "en": " 🧩 Synergy & Roles ", "zh": " 🧩 协同与角色 " },
+    "tab_mana": { "en": " 📊 Mana & Curve ", "zh": " 📊 法术力与曲线 " },
+
+    "pool_grade_initial": { "en": "Pool Power Grade: --", "zh": "卡池强度等级:--", "status": "pending_review", "note": "Uses term.card_pool" },
+    "pool_grade_filled": {
+      "en": "Pool Quality: {p:.0f}/100 [{grade}]",
+      "zh": "卡池质量:{p:.0f}/100 [{grade}]",
+      "status": "pending_review"
+    },
+    "top23_initial": {
+      "en": "Top 23 Cards Avg Win Rate: --%",
+      "zh": "前 23 张卡平均胜率:--%"
+    },
+    "top23_filled": {
+      "en": "Top 23 Avg Win Rate: {w:.1f}% (Format Avg: {m:.1f}%)",
+      "zh": "前 23 张平均胜率:{w:.1f}%(赛制均值:{m:.1f}%)"
+    },
+    "box_top_archetypes": { "en": "TOP ARCHETYPES", "zh": "最佳原型", "status": "pending_review" },
+    "box_best_cards": { "en": "BEST CARDS DRAFTED", "zh": "撷选最佳卡牌", "status": "pending_review", "note": "Should this verb be 轮抓 instead of 撷选? e.g. 「最佳轮抓卡牌」" },
+    "box_steals": { "en": "BIGGEST STEALS (LATE PICKS)", "zh": "最大捡漏(晚选)" },
+    "box_reaches": { "en": "BIGGEST REACHES (EARLY PICKS)", "zh": "最大超前(早选)" },
+    "box_creature_types": { "en": "TOP CREATURE TYPES", "zh": "顶级生物类别" },
+    "box_card_roles": { "en": "CARD ROLES", "zh": "卡牌角色" },
+    "box_staples": { "en": "PREMIUM STAPLES", "zh": "高级常用牌" },
+    "box_non_basic_lands": { "en": "NON-BASIC LANDS", "zh": "非基本地" },
+    "box_rares_mythics": { "en": "RARES & MYTHICS", "zh": "稀有与秘稀" },
+
+    "grade_s": { "en": "S (God Tier)", "zh": "S(神级)" },
+    "grade_a": { "en": "A (Amazing)", "zh": "A(超凡)" },
+    "grade_bplus": { "en": "B+ (Great)", "zh": "B+(优秀)" },
+    "grade_b": { "en": "B (Good)", "zh": "B(良好)" },
+    "grade_c": { "en": "C (Average)", "zh": "C(普通)" },
+    "grade_d": { "en": "D (Below Average)", "zh": "D(欠佳)" },
+    "grade_f": { "en": "F (Trainwreck)", "zh": "F(灾难)" },
+
+    "none_identified": { "en": "None Identified", "zh": "未识别" },
+    "no_steals": { "en": "No major steals detected.", "zh": "未发现明显捡漏。" },
+    "no_reaches": { "en": "No major reaches detected.", "zh": "未发现明显超前。" },
+    "no_creature_types": { "en": "No creature types with 3+ cards.", "zh": "没有 3 张以上同类的生物类别。" },
+    "no_tags_matched": { "en": "No Scryfall tags matched.", "zh": "未匹配到 Scryfall 标签。" },
+    "no_staples": { "en": "No premium staples drafted.", "zh": "未抓到高级常用牌。", "status": "pending_review", "note": "drafted 在这里指 '轮抓得到的'。" },
+    "no_non_basics": { "en": "No non-basic lands drafted.", "zh": "未抓到非基本地。", "status": "pending_review" },
+    "no_rares": { "en": "No Rares or Mythics drafted.", "zh": "未抓到稀有或秘稀。", "status": "pending_review" },
+    "actual_record": {
+      "en": "Actual 17Lands Record: {w} Wins - {l} Losses",
+      "zh": "17Lands 实际战绩:{w} 胜 - {l} 负"
+    }
+  },
+
+  "taken": {
+    "filter_label": { "en": "FILTER:", "zh": "过滤:" },
+    "filter_creatures": { "en": "Creatures", "zh": "生物" },
+    "filter_lands": { "en": "Lands", "zh": "地" },
+    "filter_spells": { "en": "Spells", "zh": "法术" },
+    "filter_other": { "en": "Other", "zh": "其他" },
+    "btn_to_visual": { "en": "Switch to Visual View", "zh": "切换至卡面视图" },
+    "btn_to_list": { "en": "Switch to List View", "zh": "切换至列表视图" },
+    "btn_export": { "en": "Export Pool", "zh": "导出卡池", "status": "pending_review", "note": "Uses term.card_pool" },
+    "btn_copied": { "en": "Copied! ✔", "zh": "已复制! ✔" }
+  },
+
+  "suggest": {
+    "ai_suggestion": { "en": "AI SUGGESTION:", "zh": "AI 建议:" },
+    "btn_copy_deck": { "en": "Copy Deck", "zh": "复制套牌" },
+    "btn_custom_builder": { "en": "Custom Builder", "zh": "自定义构建" },
+    "tab_main_deck": { "en": " MAIN DECK (0) ", "zh": " 主套牌 (0) " },
+    "tab_main_deck_dynamic": { "en": " MAIN DECK ({n}) ", "zh": " 主套牌 ({n}) ", "note": "Used when count is non-zero" },
+    "tab_sideboard": { "en": " SIDEBOARD ", "zh": " 备牌 " },
+    "tab_stats": { "en": " STATS & ANALYSIS ", "zh": " 数据与分析 " },
+    "tab_simulation": { "en": " SIMULATION & SAMPLE HAND ", "zh": " 模拟与起手牌 ", "status": "pending_review", "note": "Sample Hand = 起手牌 是否准确?" },
+    "btn_draw_hand": { "en": "Draw New Hand", "zh": "抽新起手牌" },
+    "hint_no_deck": { "en": "Generate a deck to analyze.", "zh": "生成一副套牌进行分析。" },
+    "hint_need_40": { "en": "Deck must have 40 cards to analyze.", "zh": "套牌需有 40 张牌方可分析。" },
+    "hint_no_deck_short": { "en": "Generate a deck first.", "zh": "请先生成套牌。" },
+    "hint_lt_7": { "en": "Deck has fewer than 7 cards.", "zh": "套牌不足 7 张牌。" },
+    "section_consistency": { "en": "CONSISTENCY METRICS", "zh": "稳定性指标" },
+    "section_risk": { "en": "RISK FACTORS", "zh": "风险因素" },
+    "section_advisor": { "en": "ADVISOR SUMMARY", "zh": "AI 总结" },
+    "section_composition": { "en": "DECK COMPOSITION", "zh": "套牌构成" },
+    "section_pips": {
+      "en": "COLOR REQUIREMENTS (PIPS)",
+      "zh": "颜色需求(色法术力点)",
+      "status": "pending_review",
+      "note": "Uses term.pip"
+    },
+    "section_roles_synergies": { "en": "ROLES & SYNERGIES", "zh": "角色与协同" },
+    "sim_label": {
+      "en": " MONTE CARLO SIMULATION (10,000 Games) ",
+      "zh": " 蒙特卡洛模拟(10,000 局) "
+    },
+    "no_tags_set": { "en": "No Scryfall tags found for this set.", "zh": "未找到此系列的 Scryfall 标签。" },
+    "image_unavailable": { "en": "Image\nUnavailable", "zh": "图片\n不可用" },
+
+    "stat_t2": { "en": "T2 Play (2-Drop):", "zh": "第2回合出牌(2费):" },
+    "stat_t3": { "en": "T3 Play (3-Drop):", "zh": "第3回合出牌(3费):" },
+    "stat_t4": { "en": "T4 Play (4-Drop):", "zh": "第4回合出牌(4费):" },
+    "stat_curve": { "en": "Perfect Curve (T2-T4):", "zh": "完美曲线(T2-T4):" },
+    "stat_removal_t4": {
+      "en": "Removal by Turn 4:",
+      "zh": "第4回合前的去除:",
+      "status": "confirmed",
+      "note": "Uses term.removal"
+    },
+    "stat_mulligan": { "en": "Mulligan Rate:", "zh": "调度率:", "status": "pending_review", "note": "Uses term.mulligan" },
+    "stat_hand_size": { "en": "Avg. Hand Size:", "zh": "平均手牌数:" },
+    "stat_screw_t3": { "en": "Missed 3rd Land Drop:", "zh": "错过第3张地:" },
+    "stat_screw_t4": { "en": "Missed 4th Land Drop:", "zh": "错过第4张地:" },
+    "stat_color_screw": { "en": "Color Screwed (T3):", "zh": "颜色卡手(T3):", "status": "pending_review", "note": "Color Screwed 是否译「颜色卡手」最合适?" },
+    "stat_flood": { "en": "Mana Flooded (T5):", "zh": "法术力洪水(T5):", "status": "pending_review" },
+
+    "rating_great": { "en": "🟢 Great", "zh": "🟢 优秀" },
+    "rating_fair": { "en": "🟡 Fair", "zh": "🟡 一般" },
+    "rating_poor": { "en": "🔴 Poor", "zh": "🔴 欠佳" }
+  },
+
+  "custom": {
+    "tab_builder": { "en": " DECK BUILDER ", "zh": " 套牌构建 " },
+    "btn_clear": { "en": "Clear", "zh": "清空" },
+    "btn_auto_lands": { "en": "Auto-Lands", "zh": "自动配地" },
+    "btn_analyze": { "en": "Analyze", "zh": "分析" },
+    "frame_main_deck": { "en": " MAIN DECK (0) ", "zh": " 主套牌 (0) " },
+    "frame_sideboard": { "en": " SIDEBOARD (0) ", "zh": " 备牌 (0) " },
+    "advice_more_2drops": {
+      "en": "• Add more 2-drops to improve early board presence.",
+      "zh": "• 增加 2 费牌以改善早期场面。"
+    },
+    "advice_color_screw_with_land": {
+      "en": "• Color screw risk is elevated. Consider cutting a colorless utility land (like {name}) for a basic land.",
+      "zh": "• 颜色卡手风险升高。建议将无色功能地({name})换成基本地。"
+    },
+    "advice_color_screw_no_land": {
+      "en": "• High color screw risk. Consider cutting a splash card or adding more fixing.",
+      "zh": "• 颜色卡手风险高。建议削减外色加入牌或增加调色。",
+      "status": "pending_review",
+      "note": "Uses term.splash and fixing concept"
+    },
+    "advice_missed_land": {
+      "en": "• Frequently missing land drops. Consider running an extra land.",
+      "zh": "• 频繁错过下地。建议增加一张地。"
+    },
+    "advice_flood": {
+      "en": "• High flood risk. Consider cutting a land or adding mana sinks.",
+      "zh": "• 洪水风险高。建议减一张地或加入法术力消耗。"
+    },
+    "advice_low_interaction": {
+      "en": "• Low early interaction. Prioritize cheap removal.",
+      "zh": "• 早期互动不足。优先选择低费去除。",
+      "status": "confirmed",
+      "note": "Uses term.removal"
+    },
+    "advice_3_color_warning": {
+      "en": "⚠️ Mana Base: You are playing 3+ colors. This inherently increases your risk of color screw. Ensure you have at least 3-4 strong fixing sources.",
+      "zh": "⚠️ 法术力来源:你在使用 3 种以上颜色,会显著提高颜色卡手风险。请确保至少有 3–4 张强力调色牌。"
+    },
+    "advice_swap": {
+      "en": "• Swap: Cut [{a}] for [{b}] to lower curve.",
+      "zh": "• 建议替换:撤掉【{a}】换成【{b}】以降低费用曲线。"
+    }
+  },
+
+  "sealed": {
+    "title_window": {
+      "en": "Sealed Studio - MTGA Draft Tool",
+      "zh": "现开工作室 - MTGA 轮抓工具",
+      "status": "pending_review"
+    },
+    "header_title": {
+      "en": "SEALED STUDIO",
+      "zh": "现开工作室",
+      "status": "pending_review",
+      "note": "Uses term.sealed_studio"
+    },
+    "btn_auto_generate": { "en": "🤖 Auto-Generate Shells", "zh": "🤖 自动生成牌型" },
+    "btn_import_deck": { "en": "📥 Import Deck", "zh": "📥 导入套牌" },
+    "btn_copy_mtga": { "en": "📋 Copy MTGA Format", "zh": "📋 以 MTGA 格式复制" },
+    "btn_export_sealeddeck": { "en": "🌐 Export to Sealeddeck.tech", "zh": "🌐 导出到 Sealeddeck.tech" },
+    "btn_to_list_view": { "en": "👁️ Switch to List View", "zh": "👁️ 切换至列表视图" },
+    "btn_to_visual_view": { "en": "👁️ Switch to Visual View", "zh": "👁️ 切换至卡面视图" },
+    "master_pool_initial": {
+      "en": "MASTER POOL (0)",
+      "zh": "总卡池 (0)",
+      "status": "pending_review"
+    },
+    "master_pool_dynamic": {
+      "en": "MASTER POOL ({n})",
+      "zh": "总卡池 ({n})",
+      "status": "pending_review"
+    },
+    "active_deck_initial": { "en": "ACTIVE DECK (0)", "zh": "当前套牌 (0)" },
+    "active_deck_dynamic": { "en": "ACTIVE DECK ({n})", "zh": "当前套牌 ({n})" },
+    "sort_label": { "en": "Sort:", "zh": "排序:" },
+    "sort_color": { "en": "Color", "zh": "颜色" },
+    "sort_cmc": { "en": "CMC", "zh": "法术力费用" },
+    "sort_rarity": { "en": "Rarity", "zh": "稀有度" },
+    "sort_type": { "en": "Type", "zh": "类型" },
+    "filter_creatures": { "en": "Creatures", "zh": "生物" },
+    "filter_spells": { "en": "Spells", "zh": "法术" },
+    "filter_lands": { "en": "Lands", "zh": "地" },
+    "btn_add_all": { "en": "Add All", "zh": "全部加入" },
+    "generating_shells": { "en": "GENERATING SHELLS...", "zh": "生成牌型中..." },
+    "exporting_browser": { "en": "EXPORTING TO BROWSER...", "zh": "导出至浏览器中..." },
+    "frame_analytics": { "en": " DECK ANALYTICS ", "zh": " 套牌分析 " },
+    "panel_composition": { "en": "COMPOSITION", "zh": "构成" },
+    "composition_stats": {
+      "en": "Creatures: 0\nSpells: 0\nLands: 0",
+      "zh": "生物:0\n法术:0\n地:0"
+    },
+    "panel_curve": { "en": "MANA CURVE", "zh": "法术力曲线" },
+    "panel_balance": { "en": "BALANCE", "zh": "平衡" },
+
+    "dialog_new_deck_title": { "en": "New Deck", "zh": "新建套牌" },
+    "dialog_new_deck_body": { "en": "Enter a name for the new deck variant:", "zh": "为新套牌变体输入名称:" },
+    "dialog_rename_title": { "en": "Rename Deck", "zh": "重命名套牌" },
+    "dialog_rename_body": { "en": "Enter new name:", "zh": "输入新名称:" },
+    "dialog_delete_title": { "en": "Delete", "zh": "删除" },
+    "dialog_delete_body": {
+      "en": "Are you sure you want to delete '{name}'?",
+      "zh": "确定要删除「{name}」吗?"
+    },
+    "cannot_delete_title": { "en": "Cannot Delete", "zh": "无法删除" },
+    "cannot_delete_body": {
+      "en": "You must have at least one deck variant.",
+      "zh": "至少须保留一个套牌变体。"
+    },
+    "import_failed_body": {
+      "en": "Failed to import deck: {e}",
+      "zh": "导入套牌失败:{e}"
+    }
+  },
+
+  "compare": {
+    "search_label": { "en": "SEARCH:", "zh": "搜索:" },
+    "btn_add": { "en": "Add", "zh": "添加" },
+    "btn_clear": { "en": "Clear", "zh": "清空" }
+  },
+
+  "overlay": {
+    "waiting": { "en": "Waiting...", "zh": "等待中..." },
+    "tab_pack": {
+      "en": " Pack ",
+      "zh": " 补充包 ",
+      "status": "pending_review",
+      "note": "Uses term.pack"
+    },
+    "tab_advisor": { "en": " Advisor ", "zh": " AI 顾问 " },
+    "tab_stats": { "en": " Stats ", "zh": " 统计 " },
+    "tab_pool": { "en": " Pool ", "zh": " 卡池 ", "status": "pending_review", "note": "Uses term.card_pool" },
+
+    "seen_cards_short": {
+      "en": "SEEN CARDS (WHEEL)",
+      "zh": "已见卡(回流)",
+      "status": "pending_review"
+    },
+    "panel_open_lanes": { "en": "OPEN LANES", "zh": "开放路线", "status": "pending_review" },
+    "panel_mana_curve": { "en": "MANA CURVE", "zh": "法术力曲线", "status": "pending_review" },
+    "panel_pool_balance": { "en": "POOL BALANCE", "zh": "卡池平衡", "status": "pending_review" },
+
+    "menu_colors_filter": { "en": "Colors (Filter)", "zh": "颜色(过滤)" },
+    "menu_event_type": { "en": "Event Type", "zh": "赛事类型" },
+    "menu_user_group": { "en": "User Group", "zh": "玩家组" },
+    "menu_preferences": { "en": "Preferences...", "zh": "首选项..." }
+  },
+
+  "practice": {
+    "title_import": { "en": "Import Sealed Pool", "zh": "导入现开卡池", "status": "pending_review" },
+    "title_generate": { "en": "Generate Random Sealed Pool", "zh": "生成随机现开卡池", "status": "pending_review" },
+    "select_set": { "en": "Select a Set to use for this session:", "zh": "选择本次使用的系列:" },
+    "btn_import": { "en": "Import from Clipboard", "zh": "从剪贴板导入" },
+    "btn_generate": { "en": "Generate Pack", "zh": "生成卡池", "status": "pending_review", "note": "Uses term.pack — actually generates a pool not a single pack; review wording." },
+    "set_list_not_loaded": {
+      "en": "Set list not loaded. Please wait for the app to initialize.",
+      "zh": "系列列表尚未加载。请等待应用初始化完成。"
+    },
+    "dataset_missing_title": { "en": "Dataset Missing", "zh": "缺少数据集" },
+    "dataset_missing_body": {
+      "en": "No downloaded dataset found for {selected}.\n\nPlease go to the Datasets tab and download it first.",
+      "zh": "未找到 {selected} 的已下载数据集。\n\n请先在「数据集」标签页中下载。"
+    },
+    "import_failed_title": { "en": "Import Failed", "zh": "导入失败" },
+    "import_no_valid_cards": {
+      "en": "No valid MTGA format cards found in clipboard.",
+      "zh": "剪贴板中未找到有效的 MTGA 格式卡牌。"
+    },
+    "clipboard_error": {
+      "en": "Failed to read clipboard: {e}",
+      "zh": "读取剪贴板失败:{e}"
+    },
+    "dataset_incomplete": {
+      "en": "Dataset is incomplete. Cannot generate pool.",
+      "zh": "数据集不完整,无法生成卡池。",
+      "status": "pending_review",
+      "note": "Uses term.card_pool"
+    }
+  },
+
+  "dialog": {
+    "success_title": { "en": "Success", "zh": "成功" },
+    "export_complete": { "en": "Export Complete.", "zh": "导出完成。" },
+    "error_title": { "en": "Error", "zh": "错误" },
+
+    "missing_dataset_title": { "en": "Missing Dataset", "zh": "缺少数据集" },
+    "missing_dataset_body": {
+      "en": "No dataset found for {display_name} ({type}).\n\nWould you like to automatically download the 17Lands 'All Users' data for this event?",
+      "zh": "未找到 {display_name}({type})的数据集。\n\n是否自动下载该赛事的 17Lands「全部玩家」数据?"
+    }
+  },
+
+  "column": {
+    "_note_critical": "These labels appear as VALUES in constants.COLUMN_FIELD_LABELS but the dict is also reverse-mapped to a label->key dict (LABEL_TO_COLUMN_FIELD). Translating these will BREAK lookup logic unless the code is refactored first. Reviewer: verify the translations; engineer: refactor before applying.",
+
+    "gihwr": {
+      "en": "GIH WR: Games in Hand Win Rate",
+      "zh": "GIHWR:手牌中胜率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor (see column._note_critical). 17Lands metric."
+    },
+    "ohwr": {
+      "en": "OH WR: Opening Hand Win Rate",
+      "zh": "OHWR:起手胜率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "gpwr": {
+      "en": "GP WR: Games Played Win Rate",
+      "zh": "GPWR:对局胜率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "gdwr": {
+      "en": "GDWR: Games Drawn Win Rate",
+      "zh": "GDWR:抽到时胜率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "gnswr": {
+      "en": "GNSWR: Games Not Seen Win Rate",
+      "zh": "GNSWR:未见时胜率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "alsa": {
+      "en": "ALSA: Average Last Seen At",
+      "zh": "ALSA:平均最末见到位",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "ata": {
+      "en": "ATA: Average Taken At",
+      "zh": "ATA:平均拿取位",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "iwd": {
+      "en": "IWD: Improvement When Drawn",
+      "zh": "IWD:抽到时胜率提升",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor."
+    },
+    "wheel": {
+      "en": "WHEEL: Probability of Wheeling",
+      "zh": "WHEEL:回流概率",
+      "status": "pending_review",
+      "note": "BLOCKED by code refactor. Uses term.wheel."
+    },
+    "colors": {
+      "en": "COLORS: Card Colors",
+      "zh": "COLORS:卡牌颜色",
+      "status": "pending_review"
+    },
+    "count": {
+      "en": "COUNT: Total Card Count",
+      "zh": "COUNT:卡牌总数",
+      "status": "pending_review"
+    },
+    "value": {
+      "en": "VALUE: Advisor Tactical Score",
+      "zh": "VALUE:战术评分",
+      "status": "pending_review"
+    },
+    "tags": {
+      "en": "TAGS: Card Roles",
+      "zh": "TAGS:卡牌角色",
+      "status": "pending_review"
+    },
+    "disabled": {
+      "en": "DISABLED: Remove Column",
+      "zh": "DISABLED:移除该列",
+      "status": "pending_review"
+    },
+
+    "ctx_add_column": { "en": "Add Column", "zh": "添加列" },
+    "ctx_reset_defaults": { "en": "Reset to Defaults", "zh": "重置为默认" },
+    "ctx_remove_field": {
+      "en": "Remove '{FIELD}'",
+      "zh": "移除「{FIELD}」"
+    },
+    "ctx_tier_label": {
+      "en": "TIER: {label} ({set})",
+      "zh": "TIER:{label}({set})"
+    }
+  },
+
+  "color": {
+    "white": { "en": "White", "zh": "白" },
+    "blue": { "en": "Blue", "zh": "蓝" },
+    "black": { "en": "Black", "zh": "黑" },
+    "red": { "en": "Red", "zh": "红" },
+    "green": { "en": "Green", "zh": "绿" },
+    "nc": { "en": "NC", "zh": "无色", "note": "NC = No Color / Colorless. Display label only; the symbol 'NC' is kept internal." }
+  },
+
+  "card_type": {
+    "creature": { "en": "Creature", "zh": "生物" },
+    "planeswalker": { "en": "Planeswalker", "zh": "鹏洛客", "note": "MTG official Chinese translation." },
+    "battle": { "en": "Battle", "zh": "战役", "status": "pending_review", "note": "MTG newer type. Official Chinese 战役 (Murders at Karlov Manor era)." },
+    "instant": { "en": "Instant", "zh": "瞬间" },
+    "sorcery": { "en": "Sorcery", "zh": "法术" },
+    "enchantment": { "en": "Enchantment", "zh": "结界" },
+    "artifact": { "en": "Artifact", "zh": "神器" },
+    "land": { "en": "Land", "zh": "地" },
+
+    "selection_all": { "en": "All Cards", "zh": "全部卡牌" },
+    "selection_creatures": { "en": "Creatures", "zh": "生物" },
+    "selection_non_creatures": { "en": "Noncreatures", "zh": "非生物" },
+    "selection_non_lands": { "en": "Non-Lands", "zh": "非地" }
+  },
+
+  "guild": {
+    "_note": "MTG 2- and 3-color faction names. Translations use MTG official Chinese where available, otherwise transliteration.",
+    "WU": { "en": "Azorius", "zh": "阿佐里乌斯" },
+    "UB": { "en": "Dimir", "zh": "迪米尔" },
+    "BR": { "en": "Rakdos", "zh": "拉铎司" },
+    "RG": { "en": "Gruul", "zh": "古鲁" },
+    "WG": { "en": "Selesnya", "zh": "瑟雷尼亚" },
+    "WB": { "en": "Orzhov", "zh": "欧佐夫" },
+    "BG": { "en": "Golgari", "zh": "葛加理" },
+    "UG": { "en": "Simic", "zh": "析米克" },
+    "UR": { "en": "Izzet", "zh": "伊捷" },
+    "WR": { "en": "Boros", "zh": "波洛斯" },
+    "WUR": { "en": "Jeskai", "zh": "洁斯凯" },
+    "UBG": { "en": "Sultai", "zh": "苏勒台" },
+    "WBR": { "en": "Mardu", "zh": "马尔都" },
+    "URG": { "en": "Temur", "zh": "铁木尔" },
+    "WBG": { "en": "Abzan", "zh": "阿布赞" },
+    "WUB": { "en": "Esper", "zh": "艾斯波" },
+    "UBR": { "en": "Grixis", "zh": "葛瑞克西斯" },
+    "BRG": { "en": "Jund", "zh": "君德" },
+    "WRG": { "en": "Naya", "zh": "纳雅" },
+    "WUG": { "en": "Bant", "zh": "班特" },
+    "WUBR": { "en": "Not-Green", "zh": "无绿" },
+    "UBRG": { "en": "Not-White", "zh": "无白" },
+    "WBRG": { "en": "Not-Blue", "zh": "无蓝" },
+    "WURG": { "en": "Not-Black", "zh": "无黑" },
+    "WUBG": { "en": "Not-Red", "zh": "无红" },
+    "WUBRG": { "en": "Five-Color", "zh": "五色" }
+  },
+
+  "group": {
+    "all": { "en": "All", "zh": "全部" },
+    "top": { "en": "Top", "zh": "顶尖" },
+    "middle": { "en": "Middle", "zh": "中段" },
+    "bottom": { "en": "Bottom", "zh": "末段" }
+  },
+
+  "event": {
+    "_note": "Event type STRINGS are also internal API/log identifiers (do not translate). These entries provide a Chinese DISPLAY label that can be shown in the UI while keeping the internal value English.",
+
+    "PremierDraft": {
+      "en": "PremierDraft",
+      "zh": "顶级轮抓",
+      "status": "pending_review",
+      "note": "Internal value must remain 'PremierDraft'. zh is a display-only label."
+    },
+    "QuickDraft": {
+      "en": "QuickDraft",
+      "zh": "快速轮抓",
+      "status": "pending_review",
+      "note": "Internal value must remain 'QuickDraft'."
+    },
+    "TradDraft": {
+      "en": "TradDraft",
+      "zh": "传统轮抓",
+      "status": "pending_review",
+      "note": "Internal value must remain 'TradDraft'."
+    },
+    "BotDraft": {
+      "en": "BotDraft",
+      "zh": "机器人轮抓",
+      "status": "pending_review",
+      "note": "Internal value must remain 'BotDraft'."
+    },
+    "Sealed": {
+      "en": "Sealed",
+      "zh": "现开",
+      "status": "pending_review",
+      "note": "Internal value must remain 'Sealed'."
+    },
+    "TradSealed": {
+      "en": "TradSealed",
+      "zh": "传统现开",
+      "status": "pending_review",
+      "note": "Internal value must remain 'TradSealed'."
+    },
+    "PickTwoDraft": {
+      "en": "PickTwoDraft",
+      "zh": "双选轮抓",
+      "status": "pending_review",
+      "note": "Internal value must remain 'PickTwoDraft'."
+    },
+    "PickTwoTradDraft": {
+      "en": "PickTwoTradDraft",
+      "zh": "双选传统轮抓",
+      "status": "pending_review"
+    },
+    "PickTwoQuickDraft": {
+      "en": "PickTwoQuickDraft",
+      "zh": "双选快速轮抓",
+      "status": "pending_review"
+    }
+  },
+
+  "tag": {
+    "_note": "Card semantic tags from Scryfall. Keys are internal; en/zh are the display labels.",
+    "removal": {
+      "en": "🎯 Removal",
+      "zh": "🎯 去除",
+      "status": "confirmed",
+      "note": "Uses term.removal"
+    },
+    "evasion": { "en": "🦅 Evasion", "zh": "🦅 闪避" },
+    "card_advantage": { "en": "📚 Advantage", "zh": "📚 牌张优势" },
+    "fixing_ramp": { "en": "🌈 Fixing", "zh": "🌈 调色/加速" },
+    "fixing": { "en": "🌈 Fixing", "zh": "🌈 调色" },
+    "combat_trick": { "en": "⚔️ Trick", "zh": "⚔️ 战斗法术" },
+    "enhancement": { "en": "🛡️ Enhance", "zh": "🛡️ 强化" },
+    "token_maker": { "en": "👯 Tokens", "zh": "👯 衍生物" },
+    "lifegain": { "en": "💖 Lifegain", "zh": "💖 加血" },
+    "mana_sink": { "en": "⚙️ Sink", "zh": "⚙️ 法力消耗" },
+    "protection": { "en": "🛡️ Protect", "zh": "🛡️ 保护" },
+    "hate": { "en": "🚫 Hate", "zh": "🚫 克制" }
+  },
+
+  "advisor_reason": {
+    "_note": "Advisor (src/advisor/engine.py) outputs reasoning strings via Recommendation.reasoning. The exhaustive list requires a deeper scan; below are the most common phrases. Reviewer can verify these; full list will be appended in a later pass.",
+
+    "elite_pick": {
+      "en": "ELITE PICK (+{z}σ)",
+      "zh": "顶级选择 (+{z}σ)"
+    },
+    "tactically_superior": {
+      "en": "Tactically superior for your pool",
+      "zh": "战术上优于你当前的卡池",
+      "status": "pending_review",
+      "note": "Uses term.card_pool"
+    },
+    "needs_2drops": {
+      "en": "Critical: Needs 2-Drops",
+      "zh": "关键:需要 2 费牌"
+    },
+    "needs_removal": {
+      "en": "Critical: Needs Removal",
+      "zh": "关键:需要去除",
+      "status": "confirmed",
+      "note": "Uses term.removal"
+    },
+    "needs_fixing": {
+      "en": "Critical: Needs Fixing",
+      "zh": "关键:需要调色",
+      "status": "pending_review",
+      "note": "Fixing = mana fixing = 调色 / 调整法术力来源. Verify wording."
+    },
+    "top_heavy_penalty": {
+      "en": "Top-Heavy Penalty",
+      "zh": "高费惩罚",
+      "status": "pending_review",
+      "note": "Top-heavy = curve too high in CMC. Alternative: 头重脚轻惩罚."
+    },
+    "archetype_synergy": {
+      "en": "Archetype Synergy",
+      "zh": "原型协同",
+      "status": "pending_review",
+      "note": "Uses term.archetype"
+    },
+    "wheels_pct": {
+      "en": "Wheels {pct}%",
+      "zh": "{pct}% 回流",
+      "status": "pending_review",
+      "note": "Uses term.wheel"
+    },
+    "uncastable_double_pip": {
+      "en": "Uncastable (Double Pip)",
+      "zh": "无法施放(双色费)",
+      "status": "pending_review",
+      "note": "Uses term.pip"
+    },
+    "off_color_penalty": {
+      "en": "Off-Color Penalty",
+      "zh": "外色惩罚",
+      "status": "pending_review"
+    },
+    "splash_speculative": {
+      "en": "Splash/Speculative",
+      "zh": "外色投机",
+      "status": "pending_review",
+      "note": "Uses term.splash"
+    }
+  },
+
+  "_do_not_translate": {
+    "_note": "Reference list ONLY — these strings MUST remain English in code. Listed here so reviewers don't accidentally suggest translations for them. None of these have a 'zh' field because they are not for translation.",
+
+    "data_field_keys": [
+      "gihwr", "ohwr", "gpwr", "alsa", "ata", "iwd", "ngp", "ngoh", "gih", "gnswr", "ngnd", "gdwr", "ngd", "wheel",
+      "cmc", "colors", "name", "types", "deck_colors", "count", "disabled", "rarity", "mana_cost", "tags"
+    ],
+    "seventeenlands_api_fields": [
+      "ever_drawn_win_rate", "opening_hand_win_rate", "win_rate", "avg_seen", "avg_pick",
+      "drawn_improvement_win_rate", "ever_drawn_game_count", "game_count", "opening_hand_game_count",
+      "never_drawn_game_count", "drawn_game_count", "never_drawn_win_rate", "drawn_win_rate",
+      "url", "url_back"
+    ],
+    "log_keywords": [
+      "[UnityCrossThreadLogger]==> Event_Join",
+      "[UnityCrossThreadLogger]==> Event_PlayerDraftMakePick",
+      "[UnityCrossThreadLogger]Draft.Notify",
+      "[UnityCrossThreadLogger]==> BotDraft_DraftStatus",
+      "[UnityCrossThreadLogger]==> BotDraft_DraftPick",
+      "DraftPack", "Draft.MakeHumanDraftPick", "CardPool", "InternalEventName"
+    ],
+    "event_internal_ids": [
+      "PremierDraft", "QuickDraft", "TradDraft", "BotDraft", "Sealed", "TradSealed",
+      "PickTwoDraft", "PickTwoTradDraft", "PickTwoQuickDraft", "PickTwo"
+    ],
+    "letter_grades": ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F", "SB"],
+    "color_symbols": ["W", "U", "B", "R", "G", "NC"],
+    "basic_land_names_internal": [
+      "Island", "Mountain", "Swamp", "Plains", "Forest", "Wastes",
+      "Snow-Covered Island", "Snow-Covered Mountain", "Snow-Covered Swamp",
+      "Snow-Covered Plains", "Snow-Covered Forest"
+    ],
+    "set_codes_examples": ["OTJ", "MH3", "DSK", "BLB", "FDN"],
+    "row_style_tags": ["bw_odd", "bw_even", "white_card", "red_card", "blue_card", "black_card", "green_card", "gold_card", "colorless_card"],
+    "font_names": ["Arial", "Courier"],
+    "config_json_keys_sample": ["theme", "theme_base", "arena_log_location", "database_location", "ui_size", "always_on_top", "deck_filter", "filter_format", "result_format", "latest_dataset"],
+    "table_view_ids": ["pack_table", "missing_table", "taken_table", "compare_table", "deck_builder", "custom_deck_main", "custom_deck_sb", "sealed_pool_table", "sealed_deck_table", "overlay_table", "overlay_pool_table", "tier_list_history", "dataset_manager"],
+
+    "mtga_in_game_strings": {
+      "_explanation": "These strings appear INSIDE MTG Arena's client. Translating them in our UI would prevent users from finding the corresponding setting in Arena.",
+      "items": [
+        "Detailed Logs (Plugin Support)",
+        "Adjust Options",
+        "Account"
+      ]
+    }
+  }
+}
