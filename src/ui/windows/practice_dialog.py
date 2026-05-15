@@ -13,6 +13,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 
 from src import constants
+from src.i18n import t
 from src.ui.styles import Theme
 from src.utils import retrieve_local_set_list, sanitize_card_name
 from src.configuration import write_configuration
@@ -25,7 +26,9 @@ class PracticeDialog(tkinter.Toplevel):
         self.app_context = app_context
         self.is_import = is_import
 
-        title = "Import Sealed Pool" if is_import else "Generate Random Sealed Pool"
+        title = (
+            t("practice.title_import") if is_import else t("practice.title_generate")
+        )
         self.title(title)
         self.geometry(f"{Theme.scaled_val(420)}x{Theme.scaled_val(220)}")
         Theme.apply(self, self.app_context.configuration.settings.theme)
@@ -38,7 +41,7 @@ class PracticeDialog(tkinter.Toplevel):
     def _build_ui(self):
         ttk.Label(
             self,
-            text="Select a Set to use for this session:",
+            text=t("practice.select_set"),
             font=Theme.scaled_font(10, "bold"),
         ).pack(pady=Theme.scaled_val(15))
 
@@ -48,8 +51,8 @@ class PracticeDialog(tkinter.Toplevel):
         )
         if not set_list_data:
             messagebox.showwarning(
-                "Error",
-                "Set list not loaded. Please wait for the app to initialize.",
+                t("dialog.error_title"),
+                t("practice.set_list_not_loaded"),
                 parent=self,
             )
             self.destroy()
@@ -129,7 +132,9 @@ class PracticeDialog(tkinter.Toplevel):
 
         om.pack(fill="x", expand=True, padx=Theme.scaled_val(20))
 
-        btn_text = "Import from Clipboard" if self.is_import else "Generate Pack"
+        btn_text = (
+            t("practice.btn_import") if self.is_import else t("practice.btn_generate")
+        )
         ttk.Button(
             self, text=btn_text, bootstyle="success", command=self._on_confirm
         ).pack(pady=Theme.scaled_val(20))
@@ -144,8 +149,8 @@ class PracticeDialog(tkinter.Toplevel):
 
         if not datasets:
             messagebox.showwarning(
-                "Dataset Missing",
-                f"No downloaded dataset found for {selected}.\n\nPlease go to the Datasets tab and download it first.",
+                t("practice.dataset_missing_title"),
+                t("practice.dataset_missing_body", selected=selected),
                 parent=self,
             )
             self.destroy()
@@ -206,15 +211,17 @@ class PracticeDialog(tkinter.Toplevel):
 
                 if not pool:
                     messagebox.showwarning(
-                        "Import Failed",
-                        "No valid MTGA format cards found in clipboard.",
+                        t("practice.import_failed_title"),
+                        t("practice.import_no_valid_cards"),
                         parent=self,
                     )
                     return
 
             except Exception as e:
                 messagebox.showerror(
-                    "Error", f"Failed to read clipboard: {e}", parent=self
+                    t("dialog.error_title"),
+                    t("practice.clipboard_error", e=e),
+                    parent=self,
                 )
                 return
         else:
@@ -242,7 +249,9 @@ class PracticeDialog(tkinter.Toplevel):
 
             if not commons or not uncommons or not rares:
                 messagebox.showwarning(
-                    "Error", "Dataset is incomplete. Cannot generate pool.", parent=self
+                    t("dialog.error_title"),
+                    t("practice.dataset_incomplete"),
+                    parent=self,
                 )
                 return
 
