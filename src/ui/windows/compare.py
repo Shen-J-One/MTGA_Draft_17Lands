@@ -6,6 +6,7 @@ Professional Card Comparison Workspace.
 import tkinter
 from tkinter import ttk
 from src import constants
+from src.i18n import t
 from src.ui.styles import Theme
 from src.ui.components import DynamicTreeviewManager, AutocompleteEntry, CardToolTip
 from src.card_logic import format_win_rate, row_color_tag
@@ -37,7 +38,7 @@ class ComparePanel(ttk.Frame):
 
         ttk.Label(
             bar,
-            text="SEARCH:",
+            text=t("compare.search_label"),
             font=Theme.scaled_font(8, "bold"),
             bootstyle="primary",
         ).pack(side="left", padx=Theme.scaled_val(5))
@@ -47,10 +48,10 @@ class ComparePanel(ttk.Frame):
         )
         self.entry_card.bind("<Return>", self._add_card)
 
-        ttk.Button(bar, text="Add", width=8, command=self._add_card).pack(
+        ttk.Button(bar, text=t("compare.btn_add"), width=8, command=self._add_card).pack(
             side="left", padx=Theme.scaled_val(2)
         )
-        ttk.Button(bar, text="Clear", command=self._clear_list).pack(
+        ttk.Button(bar, text=t("compare.btn_clear"), command=self._clear_list).pack(
             side="right", padx=Theme.scaled_val(5)
         )
 

@@ -9,6 +9,7 @@ from tkinter import ttk
 from typing import List, Dict, Any
 
 from src import constants
+from src.i18n import t
 from src.card_logic import stack_cards, copy_deck, row_color_tag
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -107,7 +108,7 @@ class TakenCardsPanel(ttk.Frame):
 
         self.lbl_filter = ttk.Label(
             type_grp,
-            text="FILTER:",
+            text=t("taken.filter_label"),
             font=Theme.scaled_font(8, "bold"),
             bootstyle="primary",
         )
@@ -116,10 +117,10 @@ class TakenCardsPanel(ttk.Frame):
 
         self.vars = {}
         for lbl, key in [
-            ("Creatures", "creature"),
-            ("Lands", "land"),
-            ("Spells", "spell"),
-            ("Other", "other"),
+            (t("taken.filter_creatures"), "creature"),
+            (t("taken.filter_lands"), "land"),
+            (t("taken.filter_spells"), "spell"),
+            (t("taken.filter_other"), "other"),
         ]:
             var = tkinter.IntVar(value=1)
             self.vars[key] = var
@@ -133,14 +134,14 @@ class TakenCardsPanel(ttk.Frame):
 
         self.btn_view = ttk.Button(
             btn_frame,
-            text="Switch to Visual View",
+            text=t("taken.btn_to_visual"),
             command=self._toggle_view,
             bootstyle="info-outline",
         )
         self.btn_view.pack(side="left", padx=Theme.scaled_val(5))
 
         self.btn_export = ttk.Button(
-            btn_frame, text="Export Pool", command=self._copy_to_clipboard
+            btn_frame, text=t("taken.btn_export"), command=self._copy_to_clipboard
         )
         self.btn_export.pack(side="left", padx=Theme.scaled_val(5))
 
@@ -167,13 +168,13 @@ class TakenCardsPanel(ttk.Frame):
     def _toggle_view(self):
         if self.view_mode == "list":
             self.view_mode = "visual"
-            self.btn_view.config(text="Switch to List View")
+            self.btn_view.config(text=t("taken.btn_to_list"))
             self.table_manager.pack_forget()
             self.visual_scroller.pack(fill="both", expand=True)
             self._render_visual_view()
         else:
             self.view_mode = "list"
-            self.btn_view.config(text="Switch to Visual View")
+            self.btn_view.config(text=t("taken.btn_to_visual"))
             self.visual_scroller.pack_forget()
             self.table_manager.pack(fill="both", expand=True)
             self._update_table_view()
@@ -328,10 +329,12 @@ class TakenCardsPanel(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(copy_deck(self.current_display_list, None))
 
-        self.btn_export.config(text="Copied! ✔", bootstyle="success")
+        self.btn_export.config(text=t("taken.btn_copied"), bootstyle="success")
         self.after(
             2000,
-            lambda: self.btn_export.config(text="Export Pool", bootstyle="primary"),
+            lambda: self.btn_export.config(
+                text=t("taken.btn_export"), bootstyle="primary"
+            ),
         )
 
     def _on_selection(self, event):
