@@ -4,6 +4,7 @@ Evaluates pool strength, calculates holistic power scores, and identifies top la
 """
 
 from src import constants
+from src.i18n import t
 from src.card_logic import get_functional_cmc
 from src.advisor.mana_base import ManaSourceAnalyzer
 from src.sealed_logic import HeuristicEvaluator
@@ -147,14 +148,14 @@ def calculate_holistic_score(deck, colors, pool_size, metrics, tier_data=None):
     mana_deficit = (avg_cmc * 5.5) - (land_count + ramp_count)
     if mana_deficit > 1.5:
         power_level -= mana_deficit * 3.0
-        breakdown_notes.append(f"High Curve / Needs Lands (-{mana_deficit * 3.0:.1f})")
+        breakdown_notes.append(t("scoring.high_curve", x=mana_deficit * 3.0))
     elif mana_deficit < -1.0 and avg_cmc < 2.8:
         power_level += 5.0
-        breakdown_notes.append("Excellent Aggro Curve (+5.0)")
+        breakdown_notes.append(t("scoring.excellent_aggro_curve"))
 
     if len(colors) <= 2:
         power_level += 2.5
-        breakdown_notes.append("Rock-Solid Mana (+2.5)")
+        breakdown_notes.append(t("scoring.rock_solid_mana"))
 
     supertypes = {
         "Creature",
@@ -178,9 +179,9 @@ def calculate_holistic_score(deck, colors, pool_size, metrics, tier_data=None):
         )
         if "changeling" in text:
             changeling_count += count
-        for t in c.get("types", []):
-            if t not in supertypes:
-                subtypes[t] = subtypes.get(t, 0) + count
+        for type_name in c.get("types", []):
+            if type_name not in supertypes:
+                subtypes[type_name] = subtypes.get(type_name, 0) + count
 
     if subtypes:
         top_tribe, tribe_count = max(subtypes.items(), key=lambda x: x[1])
@@ -195,7 +196,7 @@ def calculate_holistic_score(deck, colors, pool_size, metrics, tier_data=None):
         if total_tribe_density >= 6 and payoff_count >= 2:
             bonus = (total_tribe_density * 0.5) + (payoff_count * 1.5)
             power_level += bonus
-            breakdown_notes.append(f"{top_tribe} Synergy (+{bonus:.1f})")
+            breakdown_notes.append(t("scoring.tribe_synergy", tribe=top_tribe, x=bonus))
 
     if len(colors) >= 3:
         domain_payoffs = sum(
@@ -209,11 +210,11 @@ def calculate_holistic_score(deck, colors, pool_size, metrics, tier_data=None):
 
         if domain_payoffs >= 2 and fixing_count >= 4:
             power_level += 6.0
-            breakdown_notes.append("Supported Domain/Soup (+6.0)")
+            breakdown_notes.append(t("scoring.supported_domain"))
         elif fixing_count < len(colors) - 1:
             penalty = (len(colors) - 1 - fixing_count) * 6.0
             power_level -= penalty
-            breakdown_notes.append(f"Greedy Mana Strain (-{penalty:.1f})")
+            breakdown_notes.append(t("scoring.greedy_mana_strain", x=penalty))
 
     evasion_count = sum(
         c.get("count", 1)
@@ -233,15 +234,17 @@ def calculate_holistic_score(deck, colors, pool_size, metrics, tier_data=None):
     )
     if evasion_count < 3 and avg_cmc > 2.5:
         power_level -= 5.0
-        breakdown_notes.append("Lacks Evasion/Reach (-5.0)")
+        breakdown_notes.append(t("scoring.lacks_evasion"))
 
+    is_incomplete = False
     expected_spells = int(23 * (min(42, pool_size) / 42.0))
     if spell_count < expected_spells - 1:
         penalty = ((expected_spells - 1) - spell_count) * 10.0
         power_level -= penalty
-        breakdown_notes.append(f"Incomplete Deck (-{penalty:.1f})")
+        breakdown_notes.append(t("scoring.incomplete_deck", x=penalty))
+        is_incomplete = True
 
-    return max(0.0, power_level), ", ".join(breakdown_notes)
+    return max(0.0, power_level), ", ".join(breakdown_notes), is_incomplete
 
 
 def estimate_record(power_level, is_bo3=False):

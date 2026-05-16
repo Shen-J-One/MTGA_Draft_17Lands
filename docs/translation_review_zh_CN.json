@@ -2212,6 +2212,83 @@
       "zh": "🚫 针对"
     }
   },
+
+  "archetype": {
+    "_note": "Variant labels emitted by src/advisor/deck_builder.py and shown in the AI Suggestion dropdown and the deck builder status bar. Internal English codes are kept as logic identifiers; only display labels are translated.",
+    "consistent": { "en": "Consistent", "zh": "稳定型" },
+    "tempo": { "en": "Tempo", "zh": "节奏型" },
+    "good_stuff_soup": { "en": "Good Stuff (Soup)", "zh": "全能型(三色)" },
+    "splash_color": {
+      "en": "Splash {color}",
+      "zh": "混入 {color}",
+      "note": "{color} stays a single-letter MTG color code (W/U/B/R/G or concatenation like 'WG')."
+    },
+    "safe_core": { "en": "🛡️ Safe Core", "zh": "🛡️ 稳健核心" },
+    "safe_tempo": { "en": "🛡️ Safe Tempo", "zh": "🛡️ 稳健节奏" },
+    "label_format": {
+      "en": "{arch} {variant} [Est: {record}] (Power: {score:.0f})",
+      "zh": "{arch} {variant} [预估 {record}] (强度 {score:.0f})",
+      "note": "Top-level label format for the AI Suggestion dropdown. {arch} is a color code like 'UR'; {variant} is the translated variant name; {record} is the estimated win-loss line; {score} is a power level number."
+    },
+    "status_analyzing_archetypes": {
+      "en": "Analyzing {arch} Archetypes...",
+      "zh": "正在分析 {arch} 套牌体系..."
+    },
+    "status_analyzing_soup": {
+      "en": "Analyzing Domain / Soup...",
+      "zh": "正在分析多色组..."
+    }
+  },
+
+  "scoring": {
+    "_note": "Breakdown notes joined by ', ' and shown beneath the AI Suggestion dropdown (deck quality summary). Emitted by deck_scorer.py and deck_builder.py.",
+    "color_screw": {
+      "en": "Color Screw (-{x:.1f})",
+      "zh": "色卡风险 (-{x:.1f})"
+    },
+    "mana_screw": {
+      "en": "Mana Screw (-{x:.1f})",
+      "zh": "卡地风险 (-{x:.1f})"
+    },
+    "flood_risk": {
+      "en": "Flood Risk (-{x:.1f})",
+      "zh": "洪水风险 (-{x:.1f})"
+    },
+    "high_curve": {
+      "en": "High Curve / Needs Lands (-{x:.1f})",
+      "zh": "曲线偏高/需要补地 (-{x:.1f})"
+    },
+    "excellent_aggro_curve": {
+      "en": "Excellent Aggro Curve (+5.0)",
+      "zh": "优秀的快攻曲线 (+5.0)"
+    },
+    "rock_solid_mana": {
+      "en": "Rock-Solid Mana (+2.5)",
+      "zh": "稳固的法术力来源 (+2.5)"
+    },
+    "tribe_synergy": {
+      "en": "{tribe} Synergy (+{x:.1f})",
+      "zh": "{tribe}协同 (+{x:.1f})",
+      "note": "{tribe} is a creature subtype name like 'Vampire'. Currently emitted in English from card data; the surrounding text becomes Chinese."
+    },
+    "supported_domain": {
+      "en": "Supported Domain/Soup (+6.0)",
+      "zh": "多色支持充足 (+6.0)"
+    },
+    "greedy_mana_strain": {
+      "en": "Greedy Mana Strain (-{x:.1f})",
+      "zh": "贪心法术力压力 (-{x:.1f})"
+    },
+    "lacks_evasion": {
+      "en": "Lacks Evasion/Reach (-5.0)",
+      "zh": "缺乏闪避/触及 (-5.0)"
+    },
+    "incomplete_deck": {
+      "en": "Incomplete Deck (-{x:.1f})",
+      "zh": "套牌不完整 (-{x:.1f})"
+    }
+  },
+
   "advisor_reason": {
     "_note": "Advisor (src/advisor/engine.py) reasoning phrases shown in the Advisor Recommendations panel and card tooltips. Exact strings as emitted by the engine (placeholders match engine code).",
     "elite_pick": {

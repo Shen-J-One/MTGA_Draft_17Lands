@@ -8,6 +8,7 @@ import logging
 import re
 import itertools
 from src import constants
+from src.i18n import t
 from src.card_logic import get_functional_cmc, stack_cards
 from src.advisor.mana_base import (
     is_castable,
@@ -31,6 +32,49 @@ GLOBAL_DECK_CACHE = {}
 
 def clear_deck_cache():
     GLOBAL_DECK_CACHE.clear()
+
+
+# Internal variant codes — DO NOT translate; used as logic keys.
+# Display strings are produced from these via the i18n catalog.
+VARIANT_CONSISTENT = "Consistent"
+VARIANT_TEMPO = "Tempo"
+VARIANT_SOUP = "Good Stuff (Soup)"
+VARIANT_SPLASH_PREFIX = "Splash "  # full form: "Splash G", "Splash WG", etc.
+VARIANT_SAFE_CORE = "Safe Core"
+VARIANT_SAFE_TEMPO = "Safe Tempo"
+
+
+def _translate_variant_name(internal_name: str) -> str:
+    """Map an internal English variant code to its localized display form."""
+    if internal_name == VARIANT_CONSISTENT:
+        return t("archetype.consistent")
+    if internal_name == VARIANT_TEMPO:
+        return t("archetype.tempo")
+    if internal_name == VARIANT_SOUP:
+        return t("archetype.good_stuff_soup")
+    if internal_name.startswith(VARIANT_SPLASH_PREFIX):
+        return t(
+            "archetype.splash_color",
+            color=internal_name[len(VARIANT_SPLASH_PREFIX):],
+        )
+    if internal_name == VARIANT_SAFE_CORE:
+        return t("archetype.safe_core")
+    if internal_name == VARIANT_SAFE_TEMPO:
+        return t("archetype.safe_tempo")
+    return internal_name
+
+
+def _format_variant_label(
+    arch_key: str, internal_name: str, record: str, score: float
+) -> str:
+    """Build the user-visible label shown in the AI Suggestion dropdown."""
+    return t(
+        "archetype.label_format",
+        arch=arch_key,
+        variant=_translate_variant_name(internal_name),
+        record=record,
+        score=score,
+    )
 
 
 def get_sideboard(pool, deck_stacked):
@@ -416,12 +460,15 @@ def suggest_deck(
                 true_arch_key, true_variant_name = arch_key, variant_name
             else:
                 if len(active_colors) == 1:
-                    true_arch_key, true_variant_name = active_colors[0], "Consistent"
+                    true_arch_key, true_variant_name = (
+                        active_colors[0],
+                        VARIANT_CONSISTENT,
+                    )
                 elif len(active_colors) == 2:
                     if pips[active_colors[1]] <= 3:
                         true_arch_key, true_variant_name = (
                             active_colors[0],
-                            f"Splash {active_colors[1]}",
+                            f"{VARIANT_SPLASH_PREFIX}{active_colors[1]}",
                         )
                     else:
                         true_arch_key = "".join(
@@ -431,7 +478,9 @@ def suggest_deck(
                             )
                         )
                         true_variant_name = (
-                            "Tempo" if "Tempo" in variant_name else "Consistent"
+                            VARIANT_TEMPO
+                            if VARIANT_TEMPO in variant_name
+                            else VARIANT_CONSISTENT
                         )
                 else:
                     true_arch_key = "".join(
@@ -441,9 +490,9 @@ def suggest_deck(
                         )
                     )
                     true_variant_name = (
-                        "Good Stuff (Soup)"
+                        VARIANT_SOUP
                         if "Soup" in variant_name
-                        else f"Splash {''.join(active_colors[2:])}"
+                        else f"{VARIANT_SPLASH_PREFIX}{''.join(active_colors[2:])}"
                     )
 
             opt_deck, opt_sb, opt_note = deck, sb, ""
@@ -454,10 +503,10 @@ def suggest_deck(
             )
 
             if deck_sig in simulated_cache:
-                opt_stats, score, breakdown = simulated_cache[deck_sig]
+                opt_stats, score, breakdown, is_incomplete = simulated_cache[deck_sig]
             else:
                 opt_stats = simulate_deck(opt_deck, iterations=10000)
-                score, breakdown = calculate_holistic_score(
+                score, breakdown, is_incomplete = calculate_holistic_score(
                     opt_deck, active_colors, pool_size, metrics
                 )
 
@@ -466,15 +515,15 @@ def suggest_deck(
                     if opt_stats["color_screw_t3"] > 10.0:
                         pen = (opt_stats["color_screw_t3"] - 10.0) * 2.5
                         score -= pen
-                        mc_penalties.append(f"Color Screw (-{pen:.1f})")
+                        mc_penalties.append(t("scoring.color_screw", x=pen))
                     if opt_stats["screw_t3"] > 22.0:
                         pen = (opt_stats["screw_t3"] - 22.0) * 1.5
                         score -= pen
-                        mc_penalties.append(f"Mana Screw (-{pen:.1f})")
+                        mc_penalties.append(t("scoring.mana_screw", x=pen))
                     if opt_stats["flood_t5"] > 27.0:
                         pen = (opt_stats["flood_t5"] - 27.0) * 1.5
                         score -= pen
-                        mc_penalties.append(f"Flood Risk (-{pen:.1f})")
+                        mc_penalties.append(t("scoring.flood_risk", x=pen))
 
                     score = max(0.0, score)
                     if mc_penalties:
@@ -483,7 +532,7 @@ def suggest_deck(
                             if breakdown
                             else ", ".join(mc_penalties)
                         )
-                simulated_cache[deck_sig] = (opt_stats, score, breakdown)
+                simulated_cache[deck_sig] = (opt_stats, score, breakdown, is_incomplete)
 
             sig = tuple(
                 sorted([f"{c.get('name')}:{c.get('count', 1)}" for c in opt_deck])
@@ -493,7 +542,9 @@ def suggest_deck(
             seen_signatures.add(sig)
 
             variant_data = {
-                "label_prefix": true_variant_name,
+                "label_prefix": _translate_variant_name(true_variant_name),
+                "variant_internal_name": true_variant_name,
+                "arch_key": true_arch_key,
                 "type": "Deck",
                 "rating": score,
                 "record": estimate_record(score, is_bo3),
@@ -505,8 +556,10 @@ def suggest_deck(
                 "optimization_note": opt_note,
             }
 
-            full_label = f"{true_arch_key} {true_variant_name} [Est: {variant_data['record']}] (Power: {score:.0f})"
-            if "Incomplete Deck" not in breakdown:
+            full_label = _format_variant_label(
+                true_arch_key, true_variant_name, variant_data["record"], score
+            )
+            if not is_incomplete:
                 all_variants.append((full_label, variant_data))
             else:
                 incomplete_variants.append((full_label, variant_data))
@@ -518,11 +571,13 @@ def suggest_deck(
         for main_colors in color_options:
             arch_key = "".join(sorted(main_colors))
             if progress_callback:
-                progress_callback({"status": f"Analyzing {arch_key} Archetypes..."})
+                progress_callback(
+                    {"status": t("archetype.status_analyzing_archetypes", arch=arch_key)}
+                )
 
             con_deck = build_variant_consistency(taken_cards, main_colors, metrics)
             process_variant(
-                "Consistent",
+                VARIANT_CONSISTENT,
                 con_deck,
                 get_sideboard(taken_cards, con_deck),
                 main_colors,
@@ -534,7 +589,7 @@ def suggest_deck(
             )
             if greedy_deck:
                 process_variant(
-                    f"Splash {splash_color}",
+                    f"{VARIANT_SPLASH_PREFIX}{splash_color}",
                     greedy_deck,
                     get_sideboard(taken_cards, greedy_deck),
                     main_colors + [splash_color],
@@ -543,7 +598,7 @@ def suggest_deck(
 
             tempo_deck = build_variant_curve(taken_cards, main_colors, metrics)
             process_variant(
-                "Tempo",
+                VARIANT_TEMPO,
                 tempo_deck,
                 get_sideboard(taken_cards, tempo_deck),
                 main_colors,
@@ -551,14 +606,14 @@ def suggest_deck(
             )
 
         if progress_callback:
-            progress_callback({"status": "Analyzing Domain / Soup..."})
+            progress_callback({"status": t("archetype.status_analyzing_soup")})
         soup_deck, soup_colors = build_variant_soup(taken_cards, metrics)
         if soup_deck:
             soup_arch_key = (
                 "".join(sorted(soup_colors[:3])) if soup_colors else "All Decks"
             )
             process_variant(
-                "Good Stuff (Soup)",
+                VARIANT_SOUP,
                 soup_deck,
                 get_sideboard(taken_cards, soup_deck),
                 soup_colors[:3] if soup_colors else ["All Decks"],
@@ -619,24 +674,46 @@ def suggest_deck(
             actual_best_safe = safe_decks_filtered[0]
             best_safe_idx = final_list.index(actual_best_safe)
 
-            old_label = actual_best_safe[0]
-            new_label = old_label.replace("Consistent", "🛡️ Safe Core").replace(
-                "Tempo", "🛡️ Safe Tempo"
-            )
-            if "🛡️" not in new_label:
-                parts = new_label.split(" ", 1)
-                new_label = (
-                    f"{parts[0]} 🛡️ Safe Core {parts[1]}"
-                    if len(parts) > 1
-                    else f"🛡️ Safe Core {new_label}"
+            safe_vd = actual_best_safe[1]
+            current_internal = safe_vd.get("variant_internal_name", "")
+            arch_key_safe = safe_vd.get("arch_key", "")
+
+            if current_internal == VARIANT_CONSISTENT:
+                # Plain Consistent variant -> upgrade to Safe Core
+                safe_vd["variant_internal_name"] = VARIANT_SAFE_CORE
+                safe_vd["label_prefix"] = _translate_variant_name(VARIANT_SAFE_CORE)
+                new_label = _format_variant_label(
+                    arch_key_safe,
+                    VARIANT_SAFE_CORE,
+                    safe_vd["record"],
+                    safe_vd["rating"],
+                )
+            elif current_internal == VARIANT_TEMPO:
+                # Plain Tempo variant -> upgrade to Safe Tempo
+                safe_vd["variant_internal_name"] = VARIANT_SAFE_TEMPO
+                safe_vd["label_prefix"] = _translate_variant_name(VARIANT_SAFE_TEMPO)
+                new_label = _format_variant_label(
+                    arch_key_safe,
+                    VARIANT_SAFE_TEMPO,
+                    safe_vd["record"],
+                    safe_vd["rating"],
+                )
+            else:
+                # Splash/Soup variant chosen as safe: keep the variant name but
+                # prepend the Safe-Core marker so the user sees a 🛡️ badge.
+                safe_marker = _translate_variant_name(VARIANT_SAFE_CORE)
+                original_display = _translate_variant_name(current_internal)
+                safe_vd["label_prefix"] = f"{safe_marker} {original_display}"
+                # Build label manually because we need the combined prefix:
+                new_label = t(
+                    "archetype.label_format",
+                    arch=arch_key_safe,
+                    variant=safe_vd["label_prefix"],
+                    record=safe_vd["record"],
+                    score=safe_vd["rating"],
                 )
 
-            actual_best_safe[1]["label_prefix"] = (
-                actual_best_safe[1]["label_prefix"]
-                .replace("Consistent", "Safe Core")
-                .replace("Tempo", "Safe Tempo")
-            )
-            updated_safe = (new_label, actual_best_safe[1])
+            updated_safe = (new_label, safe_vd)
             final_list[best_safe_idx] = updated_safe
 
             if best_safe_idx > 0:
