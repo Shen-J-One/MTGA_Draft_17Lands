@@ -89,7 +89,7 @@
     },
     "sealed_studio": {
       "en": "Sealed Studio",
-      "zh": "现开模拟器",
+      "zh": "现开工坊",
       "status": "pending_review",
       "note": "Derived from term.sealed. Alternatives: 现开实验室 / 现开模拟器."
     },
@@ -107,13 +107,13 @@
     },
     "pack": {
       "en": "Pack",
-      "zh": "卡包",
+      "zh": "牌包",
       "status": "pending_review",
       "note": "MTG official 补充包. A pack of 14-15 cards opened during draft."
     },
     "card_pool": {
       "en": "Card Pool",
-      "zh": "卡池",
+      "zh": "牌池",
       "status": "pending_review",
       "note": "Common community term. Used in pool grading, sealed pool, taken pool."
     },
@@ -316,13 +316,13 @@
     },
     "tools_practice_generate": {
       "en": "Practice: Generate Random Sealed Pool",
-      "zh": "练习:生成随机现开卡池",
+      "zh": "练习:生成随机现开牌池",
       "status": "pending_review",
       "note": "Uses term.sealed"
     },
     "tools_practice_import": {
       "en": "Practice: Import Sealed Pool from Clipboard",
-      "zh": "练习:从剪贴板导入现开卡池",
+      "zh": "练习:从剪贴板导入现开牌池",
       "status": "pending_review",
       "note": "Uses term.sealed"
     },
@@ -478,7 +478,7 @@
     },
     "card_pool": {
       "en": " Card Pool ",
-      "zh": " 卡池 ",
+      "zh": " 牌池 ",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     },
@@ -868,7 +868,7 @@
     },
     "waiting_pack": {
       "en": "Waiting for pack data to appear in the log...",
-      "zh": "等待卡包数据出现在日志中...",
+      "zh": "等待牌包数据出现在日志中...",
       "status": "pending_review",
       "note": "Uses term.pack"
     },
@@ -922,7 +922,7 @@
     },
     "frame_live_pack": {
       "en": " LIVE PACK: TACTICAL EVALUATION ",
-      "zh": " 实时卡包:战术评估 ",
+      "zh": " 实时牌包:战术评估 ",
       "status": "pending_review",
       "note": "Uses term.pack. Leading/trailing space part of frame styling."
     },
@@ -946,7 +946,7 @@
     },
     "panel_pool_balance": {
       "en": "POOL BALANCE",
-      "zh": "卡池平衡",
+      "zh": "牌池平衡",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     },
@@ -995,7 +995,7 @@
     },
     "enter_sealed_studio": {
       "en": "⚔️ Enter Sealed Studio",
-      "zh": "⚔️ 进入现开模拟器",
+      "zh": "⚔️ 进入现开工坊",
       "status": "pending_review",
       "note": "Uses term.sealed_studio"
     },
@@ -1014,13 +1014,13 @@
     },
     "pool_grade_initial": {
       "en": "Pool Power Grade: --",
-      "zh": "卡池强度等级:--",
+      "zh": "牌池强度等级:--",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     },
     "pool_grade_filled": {
       "en": "Pool Quality: {p:.0f}/100 [{grade}]",
-      "zh": "卡池质量:{p:.0f}/100 [{grade}]",
+      "zh": "牌池质量:{p:.0f}/100 [{grade}]",
       "status": "pending_review"
     },
     "top23_initial": {
@@ -1052,7 +1052,7 @@
     },
     "box_creature_types": {
       "en": "TOP CREATURE TYPES",
-      "zh": "顶级生物类别"
+      "zh": "最多生物类别"
     },
     "box_card_roles": {
       "en": "CARD ROLES",
@@ -1170,7 +1170,7 @@
     },
     "btn_export": {
       "en": "Export Pool",
-      "zh": "导出卡池",
+      "zh": "导出牌池",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     },
@@ -1386,7 +1386,7 @@
     },
     "advice_low_interaction": {
       "en": "• Low early interaction. Prioritize cheap removal.",
-      "zh": "• 早期互动不足。优先选择低费去除。",
+      "zh": "• 前期互动不足。优先选择低费去除。",
       "status": "confirmed",
       "note": "Uses term.removal"
     },
@@ -1418,12 +1418,12 @@
   "sealed": {
     "title_window": {
       "en": "Sealed Studio - MTGA Draft Tool",
-      "zh": "现开模拟器 - MTGA 轮抓工具",
+      "zh": "现开工坊 - MTGA 轮抓工具",
       "status": "pending_review"
     },
     "header_title": {
       "en": "SEALED STUDIO",
-      "zh": "现开模拟器",
+      "zh": "现开工坊",
       "status": "pending_review",
       "note": "Uses term.sealed_studio"
     },
@@ -1453,12 +1453,12 @@
     },
     "master_pool_initial": {
       "en": "MASTER POOL (0)",
-      "zh": "总卡池 (0)",
+      "zh": "总牌池 (0)",
       "status": "pending_review"
     },
     "master_pool_dynamic": {
       "en": "MASTER POOL ({n})",
-      "zh": "总卡池 ({n})",
+      "zh": "总牌池 ({n})",
       "status": "pending_review"
     },
     "active_deck_initial": {
@@ -1583,7 +1583,7 @@
     },
     "partial_import_body_prefix": {
       "en": "Deck imported, but the following cards were skipped because they are not in your pool (or you exceeded your owned quantity limits):\n\n",
-      "zh": "套牌已导入,但以下卡牌被跳过(它们不在你的卡池中,或超出了你的拥有数量上限):\n\n"
+      "zh": "套牌已导入,但以下卡牌被跳过(它们不在你的牌池中,或超出了你的拥有数量上限):\n\n"
     },
     "partial_import_more_suffix": {
       "en": " ...and {n} more.",
@@ -1650,7 +1650,7 @@
     },
     "tab_pack": {
       "en": " Pack ",
-      "zh": " 卡包 ",
+      "zh": " 牌包 ",
       "status": "pending_review",
       "note": "Uses term.pack"
     },
@@ -1664,7 +1664,7 @@
     },
     "tab_pool": {
       "en": " Pool ",
-      "zh": " 卡池 ",
+      "zh": " 牌池 ",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     },
@@ -1685,7 +1685,7 @@
     },
     "panel_pool_balance": {
       "en": "POOL BALANCE",
-      "zh": "卡池平衡",
+      "zh": "牌池平衡",
       "status": "pending_review"
     },
     "menu_colors_filter": {
@@ -1708,12 +1708,12 @@
   "practice": {
     "title_import": {
       "en": "Import Sealed Pool",
-      "zh": "导入现开卡池",
+      "zh": "导入现开牌池",
       "status": "pending_review"
     },
     "title_generate": {
       "en": "Generate Random Sealed Pool",
-      "zh": "生成随机现开卡池",
+      "zh": "生成随机现开牌池",
       "status": "pending_review"
     },
     "select_set": {
@@ -1726,7 +1726,7 @@
     },
     "btn_generate": {
       "en": "Generate Pack",
-      "zh": "生成卡池",
+      "zh": "生成牌池",
       "status": "pending_review",
       "note": "Uses term.pack — actually generates a pool not a single pack; review wording."
     },
@@ -1756,7 +1756,7 @@
     },
     "dataset_incomplete": {
       "en": "Dataset is incomplete. Cannot generate pool.",
-      "zh": "数据集不完整,无法生成卡池。",
+      "zh": "数据集不完整,无法生成牌池。",
       "status": "pending_review",
       "note": "Uses term.card_pool"
     }
@@ -1805,7 +1805,7 @@
     "_note_critical": "These labels appear as VALUES in constants.COLUMN_FIELD_LABELS but the dict is also reverse-mapped to a label->key dict (LABEL_TO_COLUMN_FIELD). Translating these will BREAK lookup logic unless the code is refactored first. Reviewer: verify the translations; engineer: refactor before applying.",
     "gihwr": {
       "en": "GIH WR: Games in Hand Win Rate",
-      "zh": "GIHWR:手牌中胜率",
+      "zh": "GIHWR:在手胜率",
       "status": "pending_review",
       "note": "BLOCKED by code refactor (see column._note_critical). 17Lands metric."
     },
@@ -1823,7 +1823,7 @@
     },
     "gdwr": {
       "en": "GDWR: Games Drawn Win Rate",
-      "zh": "GDWR:抽到时胜率",
+      "zh": "GDWR:抽到胜率",
       "status": "pending_review",
       "note": "BLOCKED by code refactor."
     },
@@ -2212,19 +2212,33 @@
       "zh": "🚫 针对"
     }
   },
-
   "archetype": {
     "_note": "Variant labels emitted by src/advisor/deck_builder.py and shown in the AI Suggestion dropdown and the deck builder status bar. Internal English codes are kept as logic identifiers; only display labels are translated.",
-    "consistent": { "en": "Consistent", "zh": "稳定型" },
-    "tempo": { "en": "Tempo", "zh": "节奏型" },
-    "good_stuff_soup": { "en": "Good Stuff (Soup)", "zh": "全能型(三色)" },
+    "consistent": {
+      "en": "Consistent",
+      "zh": "稳定型"
+    },
+    "tempo": {
+      "en": "Tempo",
+      "zh": "节奏型"
+    },
+    "good_stuff_soup": {
+      "en": "Good Stuff (Soup)",
+      "zh": "全能型(三色)"
+    },
     "splash_color": {
       "en": "Splash {color}",
       "zh": "混入 {color}",
       "note": "{color} stays a single-letter MTG color code (W/U/B/R/G or concatenation like 'WG')."
     },
-    "safe_core": { "en": "🛡️ Safe Core", "zh": "🛡️ 稳健核心" },
-    "safe_tempo": { "en": "🛡️ Safe Tempo", "zh": "🛡️ 稳健节奏" },
+    "safe_core": {
+      "en": "🛡️ Safe Core",
+      "zh": "🛡️ 稳健核心"
+    },
+    "safe_tempo": {
+      "en": "🛡️ Safe Tempo",
+      "zh": "🛡️ 稳健节奏"
+    },
     "label_format": {
       "en": "{arch} {variant} [Est: {record}] (Power: {score:.0f})",
       "zh": "{arch} {variant} [预估 {record}] (强度 {score:.0f})",
@@ -2239,7 +2253,6 @@
       "zh": "正在分析多色组..."
     }
   },
-
   "scoring": {
     "_note": "Breakdown notes joined by ', ' and shown beneath the AI Suggestion dropdown (deck quality summary). Emitted by deck_scorer.py and deck_builder.py.",
     "color_screw": {
@@ -2288,7 +2301,6 @@
       "zh": "套牌不完整 (-{x:.1f})"
     }
   },
-
   "advisor_reason": {
     "_note": "Advisor (src/advisor/engine.py) reasoning phrases shown in the Advisor Recommendations panel and card tooltips. Exact strings as emitted by the engine (placeholders match engine code).",
     "elite_pick": {
@@ -2297,7 +2309,7 @@
     },
     "tactically_superior": {
       "en": "Tactically superior for your pool",
-      "zh": "战术上更适合你当前牌池"
+      "zh": "战术匹配当前牌池"
     },
     "true_bomb": {
       "en": "TRUE BOMB (High IWD)",
@@ -2317,16 +2329,16 @@
     },
     "needs_2drops": {
       "en": "Critical: Needs 2-Drops",
-      "zh": "紧急:需要 2 费牌"
+      "zh": "关键牌:需要 2 费"
     },
     "needs_removal": {
       "en": "Critical: Needs Removal",
-      "zh": "紧急:需要去除",
+      "zh": "关键牌:需要去除",
       "status": "confirmed"
     },
     "needs_fixing": {
       "en": "Critical: Needs Fixing",
-      "zh": "紧急:需要调色"
+      "zh": "关键牌:需要法术力调整"
     },
     "needs_creatures": {
       "en": "Critical: Needs Creatures",
@@ -2399,7 +2411,7 @@
     },
     "off_color_penalty": {
       "en": "Off-Color Penalty",
-      "zh": "混色惩罚",
+      "zh": "偏色惩罚",
       "note": "Reference label; engine emits 'off_color' / 'off_color_gold' instead."
     },
     "splashable": {
