@@ -13,6 +13,7 @@ import json
 
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.card_logic import field_process_sort, row_color_tag
 from src.ui.styles import Theme
 from src.utils import open_file
@@ -661,17 +662,18 @@ class DashboardFrame(ttk.Frame):
                 if any(c.get(constants.DATA_FIELD_NAME) == name for c in picked_cards):
                     is_picked = True
 
-            display_name = name
+            localized_name = _zh_display_name(name)
+            display_name = localized_name
             if rec:
                 if rec.is_elite:
-                    display_name = f"⭐ {name}"
+                    display_name = f"⭐ {localized_name}"
                     row_tag = (
                         "elite_bomb"
                         if not self.configuration.settings.card_colors_enabled
                         else row_tag
                     )
                 elif rec.archetype_fit == "High":
-                    display_name = f"[+] {name}"
+                    display_name = f"[+] {localized_name}"
                     row_tag = (
                         "high_fit"
                         if not self.configuration.settings.card_colors_enabled
