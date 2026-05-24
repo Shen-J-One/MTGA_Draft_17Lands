@@ -21,6 +21,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Force UTF-8 on stdout/stderr so the ✅ / ❌ status glyphs below render
+# on Windows consoles that default to GBK (cp936). Without this, the
+# final summary print raises UnicodeEncodeError and the script exits 1
+# even when all gates passed.
+for stream in (sys.stdout, sys.stderr):
+    try:
+        stream.reconfigure(encoding="utf-8")
+    except (AttributeError, OSError):
+        pass
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 
