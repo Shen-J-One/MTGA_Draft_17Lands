@@ -7,6 +7,7 @@ import tkinter
 from tkinter import ttk
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.ui.styles import Theme
 from src.ui.components import DynamicTreeviewManager, AutocompleteEntry, CardToolTip
 from src.card_logic import format_win_rate, row_color_tag
@@ -121,7 +122,7 @@ class ComparePanel(ttk.Frame):
 
             for field in self.table_manager.active_fields:
                 if field == "name":
-                    row_values.append(card.get("name", ""))
+                    row_values.append(_zh_display_name(card.get("name", "")))
                 elif field == "colors":
                     row_values.append("".join(card.get("colors", [])))
                 elif field == "tags":

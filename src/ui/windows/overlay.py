@@ -8,6 +8,7 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.card_logic import row_color_tag, stack_cards, get_deck_metrics
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -460,14 +461,15 @@ class CompactOverlay(tb.Toplevel):
                     ):
                         is_picked = True
 
-                display_name = name
+                localized_name = _zh_display_name(name)
+                display_name = localized_name
                 if rec:
                     if rec.is_elite:
-                        display_name = f"⭐ {name}"
+                        display_name = f"⭐ {localized_name}"
                         if not self.configuration.settings.card_colors_enabled:
                             row_tag = "elite_bomb"
                     elif rec.archetype_fit == "High":
-                        display_name = f"[+] {name}"
+                        display_name = f"[+] {localized_name}"
                         if not self.configuration.settings.card_colors_enabled:
                             row_tag = "high_fit"
 

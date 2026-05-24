@@ -10,6 +10,7 @@ from typing import List, Dict, Any
 
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.card_logic import stack_cards, copy_deck, row_color_tag
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -198,7 +199,7 @@ class TakenCardsPanel(ttk.Frame):
             row_values = []
             for field in self.table_manager.active_fields:
                 if field == "name":
-                    row_values.append(card.get("name", "Unknown"))
+                    row_values.append(_zh_display_name(card.get("name", "Unknown")))
                 elif field == "count":
                     row_values.append(card.get("count", 1))
                 elif field == "colors":

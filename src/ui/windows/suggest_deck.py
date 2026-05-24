@@ -20,6 +20,7 @@ from PIL import Image, ImageTk
 
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.card_logic import copy_deck, get_strict_colors, is_castable, get_functional_cmc
 from src.ui.styles import Theme
 from src.ui.components import DynamicTreeviewManager, CardToolTip, AutoScrollbar
@@ -1055,7 +1056,7 @@ class SuggestDeckPanel(ttk.Frame):
                 for field in manager.active_fields:
 
                     if field == "name":
-                        row_values.append(name)
+                        row_values.append(_zh_display_name(name))
                     elif field == "count":
                         row_values.append(str(count))
                     elif field == "cmc":

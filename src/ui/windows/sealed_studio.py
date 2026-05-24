@@ -19,6 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from src import constants
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.configuration import Configuration
 from src.ui.styles import Theme
 from src.ui.components import (
@@ -872,7 +873,7 @@ class SealedStudioWindow(tb.Toplevel):
             row_values = []
             for field in manager.active_fields:
                 if field == "name":
-                    row_values.append(card.get("name", "Unknown"))
+                    row_values.append(_zh_display_name(card.get("name", "Unknown")))
                 elif field == "count":
                     row_values.append(str(card.get("count", 1)))
                 elif field == "cmc":
