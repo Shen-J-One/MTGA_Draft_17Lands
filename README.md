@@ -6,8 +6,9 @@
 > 默认中文界面;可在 `File → Preferences → LANGUAGE / 语言` 切换回英文。
 >
 > - **Fork 仓库**:[Shen-J-One/MTGA_Draft_17Lands](https://github.com/Shen-J-One/MTGA_Draft_17Lands)
-> - **本地化范围**:全部用户可见 UI(菜单、对话框、仪表盘、套牌构建、Sealed Studio、AI 推荐理由等);MTG 卡牌名 / 17Lands 字段码 / Arena 客户端原文等数据契约保留英文
+> - **本地化范围**:全部用户可见 UI(菜单、对话框、仪表盘、套牌构建、Sealed Studio、AI 推荐理由等);17Lands 字段码 / Arena 客户端原文等数据契约保留英文。**牌名中文显示** 由 [mtgch.com](https://mtgch.com)(大学院废墟)的公开静态数据集驱动 — 仅在选择简中界面时启用,作为显示层覆盖,英文名仍是数据契约源头(排序/搜索/导出均按英文)。
 > - **MTG 术语**:采用社群通用译法(Draft = 轮抓,Removal = 去除等)
+> - **致谢**:牌名中文译法数据来自 [mtgch.com / 大学院废墟](https://mtgch.com) 社区维护的公开静态字典。集成方式参考开源项目 [lieyanqzu/shiqidi](https://github.com/lieyanqzu/shiqidi)(MIT)的实现。
 >
 > 上游英文版的功能介绍、使用步骤、开发文档以下原文不变。
 

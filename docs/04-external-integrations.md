@@ -53,6 +53,21 @@ To ensure the app works seamlessly on Day 1 of a new set release without waiting
 
 ---
 
+## 3.5 mtgch.com Static Card-Name Overlay (Chinese Names)
+
+The Chinese localization fork uses a public static dataset to display Chinese card names. When the active language is `zh_CN`, the application overlays Chinese names on top of the English ones at the UI layer only — the data pipeline still keys everything by English name.
+
+- **URL:** `https://mtgch.com/static/card_names.json`
+- **Format:** JSON array of 5-tuples `[english, chinese, image_url, scryfall_id, oracle_id]`
+- **Size:** ~7 MB uncompressed (~35,500 entries as of 2026-05).
+- **Cache:** Stored at `Temp/RawCache/card_names_zh_CN.json` with an `*.etag` sidecar. Staleness window is 24 h — matches the 17Lands policy. Refresh requests use `If-None-Match: <etag>` and accept HTTP 304 to avoid redownloading unchanged data.
+- **Compliance:** The endpoint is on the `/static/` path which is not disallowed by mtgch's `robots.txt` (only `/api/`, `/search`, etc. are). The same URL is used in production by the open-source project [`lieyanqzu/shiqidi`](https://github.com/lieyanqzu/shiqidi) (MIT). Our fetcher identifies itself with a descriptive `User-Agent` matching the existing 17Lands/Scryfall convention.
+- **Failure mode:** Network failure or corrupt cache silently disables the overlay — every UI surface falls back to English names. Language other than `zh_CN` short-circuits the lookup entirely.
+- **Module:** `src/chinese_names.py`.
+- **Attribution:** see README.
+
+---
+
 ## 4. GitHub Releases (Self-Update)
 
 - **Endpoint:** `https://api.github.com/repos/unrealities/MTGA_Draft_17Lands/releases/latest`
