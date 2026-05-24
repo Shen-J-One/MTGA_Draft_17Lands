@@ -25,7 +25,7 @@ import argparse
 import os
 import sys
 import logging
-from src import constants, i18n
+from src import constants, i18n, chinese_names
 from src.configuration import read_configuration, write_configuration
 from src.limited_sets import LimitedSets
 from src.log_scanner import ArenaScanner
@@ -203,6 +203,7 @@ def main():
 
     # Load localization catalog before any UI is built.
     i18n.load(getattr(config.settings, "language", "zh_CN"))
+    chinese_names.start_background_load()
 
     root = None
 
