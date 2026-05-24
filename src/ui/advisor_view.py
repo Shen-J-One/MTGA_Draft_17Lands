@@ -9,6 +9,7 @@ import ttkbootstrap as tb
 from typing import List
 from src.advisor.schema import Recommendation
 from src.i18n import t
+from src.chinese_names import display_name as _zh_display_name
 from src.ui.styles import Theme
 from src.constants import TAG_VISUALS
 from src.ui.components import CollapsibleFrame
@@ -131,7 +132,7 @@ class AdvisorPanel(tb.Frame):
             font_weight = "bold" if is_elite else "normal"
             lbl_name = tb.Label(
                 header_frame,
-                text=rec.card_name.upper(),
+                text=_zh_display_name(rec.card_name).upper(),
                 font=Theme.scaled_font(name_font_size, font_weight),
                 wraplength=Theme.scaled_val(180 if self.mini_mode else 160),
                 justify="left",
